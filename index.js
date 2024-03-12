@@ -5,7 +5,7 @@ let svg = d3.select('#map').append('svg')
     .attr('width', width)
     .attr('height', height);
 
-let tooltip = d3.select("body").append("div")
+let tooltip = d3.select("#map").append("div")
     .attr("class", "data-tooltip")
     .style("opacity", 0);
 
