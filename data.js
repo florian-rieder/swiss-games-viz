@@ -35,19 +35,62 @@ canton2id = {
 async function getData() {
 
     games = [];
-    // Grab all the data recursively ??
-    await fetch("https://api.swissgames.garden/search/games?page=0")
-        .then((response) => response.json())
-        .catch((error) => console.log(error))
-        .then((json) => {
+
+    promises = []
+
+    // Grab all the data. Since there aren't more specific API endpoints
+    for (i = 0; i < 32; i++) {
+
+        promise = fetch(`https://api.swissgames.garden/search/games?page=${i}`)
+            .then((response) => response.json())
+            .catch((error) => console.log(error))
+
+        promises.push(promise)
+    }
+
+    // Wait for all requests to be completed
+    await Promise.all(promises).then((jsons) => {
+
+        for (json of jsons) {
+
             console.log(json);
 
-            for (hit of json["hits"]["hits"]) {
-                games.push(hit["_source"])
-            }
-        });
+            hits = json["hits"]["hits"];
 
-    console.log(games)
+            if (hits.length == 0) {
+                console.log('EMPTY');
+                return;
+            }
+
+            for (hit of hits) {
+                games.push(hit["_source"]);
+            }
+        }
+    })
+
+
+    console.log(games);
+    return games;
 }
 
-getData();
+function storeLocalData(key, data){
+    // Put the object into storage
+    localStorage.setItem(key, JSON.stringify(data));
+}
+function retrieveLocalData(key){
+    return JSON.parse(localStorage.getItem(key));
+}
+
+async function getCachedData(){
+    if (localStorage.getItem("data") === null) {
+        data = await getData();
+
+        storeLocalData("data", data);
+    } else {
+        data = retrieveLocalData("data");
+    }
+
+    return data;
+}
+
+getCachedData().then((data) => console.log(data))
