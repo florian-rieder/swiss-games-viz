@@ -17,8 +17,7 @@ canton2id = {
     "basel-stadt": 12,
     "basel-landschaft": 13,
     "schaffhausen": 14,
-    "appenzell": 15, // Ausserrhoden
-    "appenzell": 16, // Innerrhoden
+    "appenzell": 15, // appenzell regroups innerrhoden and ausserrhoden, with id 15. id 16 is ignored.
     "st_gallen": 17,
     "graub_nden": 18,
     "aargau": 19,

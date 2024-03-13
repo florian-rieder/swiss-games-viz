@@ -26,9 +26,11 @@ Promise.all([getCachedData(), d3.json('shapefiles/output.geojson')]).then((datas
 
     data = datas[0];
     geodata = datas[1];
+
     console.log(geodata)
     console.log(data.games);
     console.log(data.cantons);
+
     // merge data to geodata
     for (featureIdx in geodata.features) {
         let dataValue = data.cantons[id2canton(geodata.features[featureIdx]["properties"]["id"])];
@@ -39,10 +41,17 @@ Promise.all([getCachedData(), d3.json('shapefiles/output.geojson')]).then((datas
     const minValue = Math.min(...values);
     const maxValue = Math.max(...values);
 
+    const range = [minValue, maxValue];
+    const colorRange = ["#3d0f13", "#e03143"];
+    
     // Define color scale with domain based on min and max values
-    const colorScale = d3.scaleLinear()
-        .domain([minValue, maxValue])
-        .range(['black', 'grey']); // Adjust colors as needed
+    // Other options:
+    // linear: .scaleLinear()
+    // logarithmic: .scaleLog()
+    // power: .scalePow().exponent(exponent)
+    const colorScale = d3.scalePow().exponent(0.2)
+        .domain(range)
+        .range(colorRange)
 
     svg.append("g")
         .selectAll("path")
@@ -50,9 +59,13 @@ Promise.all([getCachedData(), d3.json('shapefiles/output.geojson')]).then((datas
         .enter()
         .append("path")
         .attr("fill", (d) => {
-            const dataValue = d.properties.num_games;
+            const numGames = d.properties.num_games;
+            // Use black for cantons with 0 games
+            if(numGames === 0){
+                return "black"
+            }
             // Use the color scale to map data values to colors
-            return colorScale(dataValue);
+            return colorScale(numGames);
         })
         // Hover effect on cantons
         .on('mouseover', onCantonMouseOver)
@@ -72,15 +85,15 @@ function onCantonMouseOver(event, d) {
         .duration(50)
         .style("opacity", 1);
 
-    // Calculate the centroid of the canton geometry
-    const centroid = path.centroid(d);
-
     numGames = d.properties.num_games;
     if (numGames == null) {
         numGames = 0;
     }
 
-    // Update tooltip and move it to the mouse position
+    // Calculate the centroid of the canton geometry
+    const centroid = path.centroid(d);
+
+    // Update tooltip and move it to the centroid
     tooltip.html(d.properties.name + " " + numGames)
         .style("left", (centroid[0] - tooltip.node().offsetWidth / 2) + "px")
         .style("top", (centroid[1] - tooltip.node().offsetHeight / 2) + "px");
