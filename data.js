@@ -1,5 +1,5 @@
 
-API_ENDPOINT = "https://api.swissgames.garden/search/games"
+API_ENDPOINT = "https://api.swissgames.garden/search/games";
 
 canton2id = {
     "z_rich": 1,
@@ -32,6 +32,16 @@ canton2id = {
     "foreign": 99// "foreign" can also happen
 }
 
+function id2canton(cantonId) {
+    for (const [canton, id] of Object.entries(canton2id)) {
+        if (id === cantonId) {
+            return canton;
+        }
+    }
+    return null; // Return null if no matching canton id is found
+}
+
+
 // Number of games per canton
 // aargau: 465
 // appenzell: 217
@@ -55,9 +65,9 @@ canton2id = {
 // zug: 31
 
 async function getData() {
-    games = [];
-    cantons = {};
-    promises = [];
+    let games = [];
+    let cantons = {};
+    let promises = [];
 
     // Grab all the data. Since there aren't more specific API endpoints
     // There's about 31 pages of data
@@ -74,7 +84,6 @@ async function getData() {
     await Promise.all(promises).then((jsons) => {
 
         for (json of jsons) {
-
             //console.log(json);
 
             const cantonsAggregate = json["aggregations"]["aggs_all"]["all_filtered_cantons"]["all_nested_cantons"]["cantons_name_keyword"]["buckets"];
@@ -95,7 +104,7 @@ async function getData() {
             const hits = json["hits"]["hits"];
 
             if (hits.length == 0) {
-                console.log('EMPTY');
+                //console.log('EMPTY');
                 return;
             }
 
@@ -105,9 +114,6 @@ async function getData() {
         }
     });
 
-
-    console.log(games);
-    console.log(cantons);
     return { games, cantons };
 }
 
@@ -128,13 +134,9 @@ async function getCachedData() {
     } else {
         games = retrieveLocalData("games");
         cantons = retrieveLocalData("cantons");
+
         data = { games, cantons };
     }
 
     return data;
 }
-
-getCachedData().then((data) => {
-    console.log(data.games);
-    console.log(data.cantons);
-});

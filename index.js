@@ -21,23 +21,45 @@ let projection = d3.geoMercator()
 let path = d3.geoPath()
     .projection(projection);
 
-// Load the features from the GeoJSON.
-d3.json('shapefiles/output.geojson').then(function (features) {
+// Load data from the SwissGamesGarden API and geodata from file
+Promise.all([getCachedData(), d3.json('shapefiles/output.geojson')]).then((datas) => {
 
-    //console.log(features);
+    data = datas[0];
+    geodata = datas[1];
+    console.log(geodata)
+    console.log(data.games);
+    console.log(data.cantons);
+    // merge data to geodata
+    for (featureIdx in geodata.features) {
+        let dataValue = data.cantons[id2canton(geodata.features[featureIdx]["properties"]["id"])];
+        geodata.features[featureIdx]["properties"]["num_games"] = dataValue || 0;
+    }
+
+    const values = Object.values(data.cantons);
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
+
+    // Define color scale with domain based on min and max values
+    const colorScale = d3.scaleLinear()
+        .domain([minValue, maxValue])
+        .range(['black', 'grey']); // Adjust colors as needed
 
     svg.append("g")
         .selectAll("path")
-        .data(features.features)
+        .data(geodata.features)
         .enter()
         .append("path")
-        .attr("fill", "#69b3a2")
+        .attr("fill", (d) => {
+            const dataValue = d.properties.num_games;
+            // Use the color scale to map data values to colors
+            return colorScale(dataValue);
+        })
         // Hover effect on cantons
         .on('mouseover', onCantonMouseOver)
         .on('mouseout', onCantonMouseOut)
         .attr("d", d3.geoPath().projection(projection))
-        .style("stroke", "#fff");
-
+        .style("stroke", "#fff")
+        
 });
 
 function onCantonMouseOver(event, d) {
@@ -53,10 +75,15 @@ function onCantonMouseOver(event, d) {
     // Calculate the centroid of the canton geometry
     const centroid = path.centroid(d);
 
+    numGames = d.properties.num_games;
+    if (numGames == null) {
+        numGames = 0;
+    }
+
     // Update tooltip and move it to the mouse position
-    tooltip.html(d.properties.name)
-        .style("left", (centroid[0] - tooltip.node().offsetWidth/2) + "px")
-        .style("top", (centroid[1] - tooltip.node().offsetHeight/2) + "px");
+    tooltip.html(d.properties.name + " " + numGames)
+        .style("left", (centroid[0] - tooltip.node().offsetWidth / 2) + "px")
+        .style("top", (centroid[1] - tooltip.node().offsetHeight / 2) + "px");
 }
 
 function onCantonMouseOut(event, d) {
