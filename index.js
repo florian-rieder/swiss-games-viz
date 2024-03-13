@@ -1,16 +1,16 @@
 const width = window.innerWidth,
     height = window.innerHeight;
 
-let svg = d3.select('#map').append('svg')
+const svg = d3.select('#map').append('svg')
     .attr('width', width)
     .attr('height', height);
 
-let tooltip = d3.select("#map").append("div")
+const tooltip = d3.select("#map").append("div")
     .attr("class", "data-tooltip")
     .style("opacity", 0);
 
 // Define a geographical projection
-let projection = d3.geoMercator()
+const projection = d3.geoMercator()
     // Scale factor found through trial and error
     .scale(10000)
     // The geographical center of Switzerland is around 46.8°, 8.2°
@@ -18,14 +18,14 @@ let projection = d3.geoMercator()
     .translate([width / 2, height / 2]);
 
 // Prepare a path object and apply the projection to it.
-let path = d3.geoPath()
+const path = d3.geoPath()
     .projection(projection);
 
 // Load data from the SwissGamesGarden API and geodata from file
 Promise.all([getCachedData(), d3.json('shapefiles/output.geojson')]).then((datas) => {
 
-    data = datas[0];
-    geodata = datas[1];
+    let data = datas[0];
+    let geodata = datas[1];
 
     console.log(geodata)
     console.log(data.games);

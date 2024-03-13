@@ -92,8 +92,7 @@ async function getData() {
                 const numGames = obj["doc_count"];
 
                 if (cantonSlug in cantons) {
-                    // Add to the total number of games for that canton
-                    cantons[cantonSlug] += numGames;
+                    continue;
                 } else {
                     // Set the total number of games for that canton
                     cantons[cantonSlug] = numGames

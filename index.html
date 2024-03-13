@@ -12,6 +12,12 @@
             color: white;
             font-family: Helvetica, Arial, sans-serif;
         }
+        h1#title {
+            background-image: linear-gradient(to right, rgb(239, 1, 91), rgb(255, 159, 41));
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+        }
         #map {
             position: relative
         }
@@ -30,7 +36,7 @@
 </head>
 
 <body>
-    <h1>Swiss Games Viz</h1>
+    <h1 id="title">Swiss Games Viz</h1>
     <div id="map"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.4/d3.min.js"
         integrity="sha512-nfUlp2ZWPKWlnAH/OsMeAqRSYBxOdPYeBXwceyw6QqqZ7uTT/s5/eS1hMKphjVBouk0jf/JQ8ULVJRnEqSHkXA=="
