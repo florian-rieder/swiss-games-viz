@@ -3,15 +3,18 @@ body {
     color: white;
     font-family: Helvetica, Arial, sans-serif;
 }
+
 h1#title {
     background-image: linear-gradient(to right, rgb(239, 1, 91), rgb(255, 159, 41));
     background-clip: text;
     color: transparent;
     text-align: center;
 }
+
 #map {
     position: relative
 }
+
 .data-tooltip {
     position: absolute;
     text-align: center;

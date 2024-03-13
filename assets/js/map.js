@@ -21,13 +21,17 @@ const projection = d3.geoMercator()
 const path = d3.geoPath()
     .projection(projection);
 
-// Load data from the SwissGamesGarden API and geodata from file
-Promise.all([getCachedData(), d3.json('assets/shapefiles/output.geojson')]).then((datas) => {
 
+// Load data from the SwissGamesGarden API and geodata from file
+Promise.all([
+    getCachedData(),
+    d3.json('assets/geometry/cantons.geojson'),
+    d3.json('assets/geometry/lakes.geojson')
+]).then((datas) => {
     let data = datas[0];
     let geodata = datas[1];
+    let lakes = datas[2];
 
-    console.log(geodata)
     console.log(data.games);
     console.log(data.cantons);
 
@@ -43,6 +47,7 @@ Promise.all([getCachedData(), d3.json('assets/shapefiles/output.geojson')]).then
 
     const range = [minValue, maxValue];
     const colorRange = ["#3d0f13", "#e03143"];
+    const waterColor = "#949494"
     
     // Define color scale with domain based on min and max values
     // Other options:
@@ -52,6 +57,14 @@ Promise.all([getCachedData(), d3.json('assets/shapefiles/output.geojson')]).then
     const colorScale = d3.scalePow().exponent(0.2)
         .domain(range)
         .range(colorRange)
+    
+    svg.append("g")
+        .selectAll("path")
+        .data(lakes.features)
+        .enter()
+        .append("path")
+        .attr("fill", d => waterColor)
+        .attr("d", d3.geoPath().projection(projection))
 
     svg.append("g")
         .selectAll("path")
@@ -72,7 +85,7 @@ Promise.all([getCachedData(), d3.json('assets/shapefiles/output.geojson')]).then
         .on('mouseout', onCantonMouseOut)
         .attr("d", d3.geoPath().projection(projection))
         .style("stroke", "#fff")
-        
+    
 });
 
 function onCantonMouseOver(event, d) {

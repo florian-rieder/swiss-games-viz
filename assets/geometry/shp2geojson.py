@@ -1,6 +1,6 @@
 """
 Preprocess spatial data
-Convert shapefile into GeoJSON and convert the coordinate system from
+Convert shapefiles into GeoJSON and convert the coordinate system from
 LV95 (Swiss national coordinate system) to WGS84 (global coordinate
 system). Simplify the geometry: we don't need a lot of detail.
 Merge Appenzell Innerrhoden and Appenzell Ausserrhoden, since they are merged
@@ -10,7 +10,8 @@ import pandas as pd
 import geopandas as gpd
 
 # Read the shapefile
-gdf = gpd.read_file('assets/shapefiles/cantons/K4kant20220101gf_ch2007Poly.shp')
+gdf = gpd.read_file('cantons/K4kant20220101gf_ch2007Poly.shp')
+lakes = gpd.read_file('hydro/k4seenyyyymmdd11_ch2007Poly.shp')
 
 # Simplify the geometry
 tolerance = 200
@@ -18,6 +19,7 @@ gdf['geometry'] = gdf['geometry'].simplify(tolerance)
 
 # Reproject to WGS84 (EPSG:4326)
 gdf_wgs84 = gdf.to_crs("EPSG:4326")
+lakes_wgs84 = lakes.to_crs("EPSG:4326")
 
 # Merge Appenzell Innerrhoden and Appenzell Ausserrhoden
 regions_to_merge = gdf_wgs84[gdf_wgs84['id'].isin([15, 16])]
@@ -40,4 +42,5 @@ gdf_wgs84 = pd.concat([gdf_wgs84, merged_region], ignore_index=True)
 
 
 # Save as GeoJSON
-gdf_wgs84.to_file('assets/shapefiles/output.geojson', driver='GeoJSON')
+gdf_wgs84.to_file('cantons.geojson', driver='GeoJSON')
+lakes_wgs84.to_file('lakes.geojson', driver='GeoJSON')
