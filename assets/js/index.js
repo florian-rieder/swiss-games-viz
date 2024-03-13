@@ -22,7 +22,7 @@ const path = d3.geoPath()
     .projection(projection);
 
 // Load data from the SwissGamesGarden API and geodata from file
-Promise.all([getCachedData(), d3.json('shapefiles/output.geojson')]).then((datas) => {
+Promise.all([getCachedData(), d3.json('assets/shapefiles/output.geojson')]).then((datas) => {
 
     let data = datas[0];
     let geodata = datas[1];

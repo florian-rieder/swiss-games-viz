@@ -1,13 +1,16 @@
 """
+Preprocess spatial data
 Convert shapefile into GeoJSON and convert the coordinate system from
 LV95 (Swiss national coordinate system) to WGS84 (global coordinate
-system).
+system). Simplify the geometry: we don't need a lot of detail.
+Merge Appenzell Innerrhoden and Appenzell Ausserrhoden, since they are merged
+in the API data.
 """
 import pandas as pd
 import geopandas as gpd
 
 # Read the shapefile
-gdf = gpd.read_file('shapefiles/cantons/K4kant20220101gf_ch2007Poly.shp')
+gdf = gpd.read_file('assets/shapefiles/cantons/K4kant20220101gf_ch2007Poly.shp')
 
 # Simplify the geometry
 tolerance = 200
@@ -37,4 +40,4 @@ gdf_wgs84 = pd.concat([gdf_wgs84, merged_region], ignore_index=True)
 
 
 # Save as GeoJSON
-gdf_wgs84.to_file('shapefiles/output.geojson', driver='GeoJSON')
+gdf_wgs84.to_file('assets/shapefiles/output.geojson', driver='GeoJSON')
