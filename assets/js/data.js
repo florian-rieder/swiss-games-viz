@@ -82,22 +82,23 @@ async function getData() {
     // Wait for all requests to be completed
     await Promise.all(promises).then((jsons) => {
 
+        // Get total of games per canton
+        const cantonsAggregate = jsons[0]["aggregations"]["aggs_all"]["all_filtered_cantons"]["all_nested_cantons"]["cantons_name_keyword"]["buckets"];
+
+        for (obj of cantonsAggregate) {
+            const cantonSlug = obj["key"];
+            const numGames = obj["doc_count"];
+
+            if (cantonSlug in cantons) {
+                continue;
+            } else {
+                // Set the total number of games for that canton
+                cantons[cantonSlug] = numGames
+            }
+        }
+
         for (json of jsons) {
             //console.log(json);
-
-            const cantonsAggregate = json["aggregations"]["aggs_all"]["all_filtered_cantons"]["all_nested_cantons"]["cantons_name_keyword"]["buckets"];
-
-            for (obj of cantonsAggregate) {
-                const cantonSlug = obj["key"];
-                const numGames = obj["doc_count"];
-
-                if (cantonSlug in cantons) {
-                    continue;
-                } else {
-                    // Set the total number of games for that canton
-                    cantons[cantonSlug] = numGames
-                }
-            }
 
             const hits = json["hits"]["hits"];
 

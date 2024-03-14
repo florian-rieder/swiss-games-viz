@@ -26,3 +26,18 @@ h1#title {
     pointer-events: none;
     font-size: 1.3rem;
 }
+
+footer {
+    color: rgb(161, 161, 161);
+    padding: 1em;
+}
+
+footer a, footer a:visited {
+    text-decoration: none;
+    color: rgb(161, 161, 161);
+    transition-duration: 100ms;
+}
+
+footer a:hover {
+    color: rgb(193, 193, 193);
+}

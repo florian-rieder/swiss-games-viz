@@ -6,12 +6,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carte interactive Swiss Games Garden</title>
+    <style>
+        body,
+        html {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+    </style>
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
 <body>
     <h1 id="title">Swiss Games Viz</h1>
+
     <div id="map"></div>
+
+    <div class="details">
+        <div id="pie"></div> <!-- Pie chart of genres of games made in the canton -->
+        <div id="histogram"></div> <!-- Histogram of release years for the canton -->
+        <!-- <div> List of games made in the Canton </div> -->
+    </div>
+
+    <footer>
+        Source of data: <a href="https://swissgames.garden/">Swiss Games Garden</a>
+    </footer>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.4/d3.min.js"
         integrity="sha512-nfUlp2ZWPKWlnAH/OsMeAqRSYBxOdPYeBXwceyw6QqqZ7uTT/s5/eS1hMKphjVBouk0jf/JQ8ULVJRnEqSHkXA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>

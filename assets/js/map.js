@@ -1,5 +1,6 @@
 const width = window.innerWidth,
-    height = window.innerHeight;
+    height = window.innerHeight,
+    mapMargin = 20;
 
 const svg = d3.select('#map').append('svg')
     .attr('width', width)
@@ -9,18 +10,7 @@ const tooltip = d3.select("#map").append("div")
     .attr("class", "data-tooltip")
     .style("opacity", 0);
 
-// Define a geographical projection
-const projection = d3.geoMercator()
-    // Scale factor found through trial and error
-    .scale(10000)
-    // The geographical center of Switzerland is around 46.8°, 8.2°
-    .center([8.226692, 46.80121])
-    .translate([width / 2, height / 2]);
-
-// Prepare a path object and apply the projection to it.
-const path = d3.geoPath()
-    .projection(projection);
-
+let path = null;
 
 // Load data from the SwissGamesGarden API and geodata from file
 Promise.all([
@@ -41,22 +31,33 @@ Promise.all([
         geodata.features[featureIdx]["properties"]["num_games"] = dataValue || 0;
     }
 
-    const values = Object.values(data.cantons);
-    const minValue = Math.min(...values);
-    const maxValue = Math.max(...values);
+    // Define a geographical projection
+    const projection = d3.geoMercator()
+    // The geographical center of Switzerland is around 46.8°, 8.2°
+    .center([8.226692, 46.80121])
+    .translate([width / 2, height / 2])
+    // Fit the map to the svg
+    .fitExtent([[mapMargin, mapMargin], [width-mapMargin, height-mapMargin]], geodata);
 
-    const range = [minValue, maxValue];
-    const colorRange = ["#3d0f13", "#e03143"];
-    const waterColor = "#949494"
+    // Prepare a path object and apply the projection to it.
+    path = d3.geoPath()
+        .projection(projection);
+
+    // Color scale
+    const values = Object.values(data.cantons);
+    const range = d3.extent(values);
+    const zeroColor = "#262626";
+    const colorRange = ["#1c0709", "#f53347"];
+    const waterColor = "#949494";
     
     // Define color scale with domain based on min and max values
     // Other options:
     // linear: .scaleLinear()
     // logarithmic: .scaleLog()
     // power: .scalePow().exponent(exponent)
-    const colorScale = d3.scalePow().exponent(0.2)
+    const colorScale = d3.scalePow().exponent(0.75)
         .domain(range)
-        .range(colorRange)
+        .range(colorRange);
     
     svg.append("g")
         .selectAll("path")
@@ -64,7 +65,7 @@ Promise.all([
         .enter()
         .append("path")
         .attr("fill", d => waterColor)
-        .attr("d", d3.geoPath().projection(projection))
+        .attr("d", d3.geoPath().projection(projection));
 
     svg.append("g")
         .selectAll("path")
@@ -75,7 +76,7 @@ Promise.all([
             const numGames = d.properties.num_games;
             // Use black for cantons with 0 games
             if(numGames === 0){
-                return "black"
+                return zeroColor;
             }
             // Use the color scale to map data values to colors
             return colorScale(numGames);
@@ -83,15 +84,15 @@ Promise.all([
         // Hover effect on cantons
         .on('mouseover', onCantonMouseOver)
         .on('mouseout', onCantonMouseOut)
+        .on('click', onCantonClick)
         .attr("d", d3.geoPath().projection(projection))
         .style("stroke", "#fff")
-    
 });
 
 function onCantonMouseOver(event, d) {
     d3.select(this).transition()
-        .duration('50')
-        .attr('opacity', '.85');
+        .duration(200)
+        .attr('opacity', '.75');
 
     // Make tooltip appear on hover
     tooltip.transition()
@@ -120,4 +121,8 @@ function onCantonMouseOut(event, d) {
     tooltip.transition()
         .duration('50')
         .style("opacity", 0);
+}
+
+function onCantonClick(event, d) {
+    console.log(d);
 }
