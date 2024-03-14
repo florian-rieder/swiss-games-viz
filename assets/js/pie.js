@@ -75,7 +75,7 @@ function onPieMouseOver(event, d) {
 
 function onPieMouseOut(event, d) {
     d3.select(this).transition()
-        .duration('50')
+        .duration('200')
         .attr('opacity', '1');
 
     pieTooltip.transition()

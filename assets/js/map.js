@@ -23,7 +23,7 @@ Promise.all([
     let lakes = datas[2];
 
     console.log(data);
-    bakePie(data.games_per_genre)
+    bakePie(data.games_per_canton)
 
     // merge data to geodata
     for (const featureIdx in geodata.features) {
@@ -115,7 +115,7 @@ function onCantonMouseOver(event, d) {
 
 function onCantonMouseOut(event, d) {
     d3.select(this).transition()
-        .duration('50')
+        .duration('200')
         .attr('opacity', '1');
 
     tooltip.transition()
@@ -127,6 +127,8 @@ function onCantonClick(event, d) {
     if (d.properties.num_games == 0) return;
 
     getAggregateData(id2canton(d.properties.id)).then((data) => {
+        document.querySelector(".details > h2").innerHTML = d.properties.name
+
         bakePie(data.games_per_genre);
     })
 
