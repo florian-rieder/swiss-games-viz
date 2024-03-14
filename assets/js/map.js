@@ -14,7 +14,7 @@ let path = null;
 
 // Load data from the SwissGamesGarden API and geodata from file
 Promise.all([
-    getCachedData(),
+    getGlobalAggregateData(),
     d3.json('assets/geometry/cantons.geojson'),
     d3.json('assets/geometry/lakes.geojson')
 ]).then((datas) => {
@@ -22,13 +22,12 @@ Promise.all([
     let geodata = datas[1];
     let lakes = datas[2];
 
-    console.log(data.games);
-    console.log(data.cantons);
+    console.log(data);
 
     // merge data to geodata
-    for (featureIdx in geodata.features) {
-        let dataValue = data.cantons[id2canton(geodata.features[featureIdx]["properties"]["id"])];
-        geodata.features[featureIdx]["properties"]["num_games"] = dataValue || 0;
+    for (const featureIdx in geodata.features) {
+        const gamesPerCanton = data.games_per_canton[id2canton(geodata.features[featureIdx].properties.id)];
+        geodata.features[featureIdx]["properties"]["num_games"] = gamesPerCanton || 0;
     }
 
     // Define a geographical projection
@@ -44,7 +43,7 @@ Promise.all([
         .projection(projection);
 
     // Color scale
-    const values = Object.values(data.cantons);
+    const values = Object.values(data.games_per_canton);
     const range = d3.extent(values);
     const zeroColor = "#262626";
     const colorRange = ["#1c0709", "#f53347"];

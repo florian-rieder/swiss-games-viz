@@ -1,5 +1,6 @@
 
 API_ENDPOINT = "https://api.swissgames.garden/search/games";
+NUM_HITS_PER_PAGE = 24;
 
 canton2id = {
     "z_rich": 1,
@@ -62,6 +63,84 @@ function id2canton(cantonId) {
 // vaud: 3782
 // z_rich: 7347
 // zug: 31
+
+/// Grab global aggregate data for:
+/// - Number of games per canton
+/// - Number of games per genre
+/// - Number of games per platform
+/// - Number of games per store
+/// - Number of games per state (canceled, development, prototype, released)
+
+async function getGlobalAggregateData() {
+    let aggregate = {};
+
+    // Grab any page, whose results contains global aggregates (number of games per canton, genre, platform, store, state)
+    json = await fetch(`${API_ENDPOINT}?page=0`)
+        .then((response) => response.json())
+        .catch((error) => console.log(error));
+
+    // Grab common aggregate data object
+    const rawAggs = json["aggregations"]["aggs_all"];
+
+    // List of property slugs for which aggregate data exist
+    const slugs = ["cantons", "genres", "platforms", "stores", "states", "locations"];
+
+    for (const slug of slugs) {
+        // Make the slug singular (cantons -> canton). More natural when accessing properties later.
+        const singular_slug = slug.slice(0, -1);
+        // Initialize nested object (prevents error when trying to access it later)
+        aggregate[`games_per_${singular_slug}`] = {};
+
+        // Grab the aggregate data for this property (slug)
+        const aggregateData = rawAggs[`all_filtered_${slug}`][`all_nested_${slug}`][`${slug}_name_keyword`]["buckets"];
+
+        for (const obj of aggregateData) {
+            const key = obj["key"];
+            const numGames = obj["doc_count"];
+            
+            // Set the total number of games for that property
+            aggregate[`games_per_${singular_slug}`][key] = numGames
+        }
+    }
+
+    // Do a little differently for release years, since the data structure is different
+    const yearsAgg = rawAggs["all_filtered_release_years_histogram"]["all_nested_release_years"]["releases_over_time"]["buckets"];
+    // Initialize nested object (prevents error when trying to access it)
+    aggregate[`games_per_year`] = {};
+
+    for (const obj of yearsAgg) {
+        const year = obj["key_as_string"];
+        const numGames = obj["doc_count"];
+
+        aggregate["games_per_year"][year] = numGames;
+    }
+
+    return aggregate;
+}
+
+// async function getCantonGamesList(cantonSlug) {
+//     let promises = []
+
+//     // Grab n pages, and extract all the games
+//     // Or: Grab pages one by one, until we get empty hits
+//     // hits["total"] gives us exactly how many games are in that canton in total !!!!
+//     // We can use this to figure out how many pages to get
+//     // We know the API sends 24 results per page.
+//     // So we need to iterate ceil(total/24)
+//     let numPagesToGet = 1;
+
+//     fetch(`${API_ENDPOINT}?cantons[]=${cantonSlug}&page=${i}`)
+//         .then(response => response.json())
+//         .catch(e => console.log(e))
+//         .then(json => {
+
+//         })
+//     for (i = 0; i < numPagesToGet; i++){
+
+//     }
+
+
+// }
 
 async function getData() {
     let games = [];
@@ -139,3 +218,6 @@ async function getCachedData() {
 
     return data;
 }
+
+
+//getCantonAggregateData().then(d => console.log(d))
