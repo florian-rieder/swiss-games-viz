@@ -11,8 +11,8 @@ h1#title {
     text-align: center;
 }
 
-#map {
-    position: relative
+.chart-container {
+    position: relative;
 }
 
 .data-tooltip {
