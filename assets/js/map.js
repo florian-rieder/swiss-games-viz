@@ -23,6 +23,7 @@ Promise.all([
     let lakes = datas[2];
 
     console.log(data);
+    bakePie(data.games_per_genre)
 
     // merge data to geodata
     for (const featureIdx in geodata.features) {
@@ -123,5 +124,10 @@ function onCantonMouseOut(event, d) {
 }
 
 function onCantonClick(event, d) {
-    console.log(d.properties);
+    if (d.properties.num_games == 0) return;
+
+    getAggregateData(id2canton(d.properties.id)).then((data) => {
+        bakePie(data.games_per_genre);
+    })
+
 }

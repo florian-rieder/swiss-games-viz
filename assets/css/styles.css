@@ -15,6 +15,10 @@ h1#title {
     position: relative;
 }
 
+.details {
+    padding: 1em;
+}
+
 .data-tooltip {
     position: absolute;
     text-align: center;

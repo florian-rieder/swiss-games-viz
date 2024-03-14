@@ -1,41 +1,3 @@
-// test data before integration with api
-const data = {
-    action: 2,
-    adventure: 2,
-    arcade: 3,
-    horror: 1,
-    local_multiplayer: 1,
-    mmo: 1,
-    one_button: 1,
-    online_multiplayer: 2,
-    party_game: 1,
-    platformer: 4,
-    puzzle: 2,
-    real_time_strategy: 1,
-    reality_augmented: 1,
-    serious_game: 4,
-    shoot_em_up: 1,
-    strategy: 1,
-    tactical: 1
-};
-
-const data2 = {
-    action: 10,
-    adventure: 20,
-    arcade: 60,
-};
-
-const data3 = {
-    platformer: 44,
-    puzzle: 2,
-    real_time_strategy: 15,
-    reality_augmented: 1,
-    serious_game: 4,
-    shoot_em_up: 1,
-    strategy: 13,
-    tactical: 1
-};
-
 // Set up dimensions and radius
 const pieWidth = 400;
 const pieHeight = 400;
@@ -120,5 +82,3 @@ function onPieMouseOut(event, d) {
         .duration('50')
         .style("opacity", 0);
 }
-
-bakePie(data)
