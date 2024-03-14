@@ -64,26 +64,36 @@ function id2canton(cantonId) {
 // z_rich: 7347
 // zug: 31
 
-/// Grab global aggregate data for:
-/// - Number of games per canton
+/// Grab aggregate data for:
+/// - Number of games per canton (only in global)
 /// - Number of games per genre
 /// - Number of games per platform
 /// - Number of games per store
 /// - Number of games per state (canceled, development, prototype, released)
-
-async function getGlobalAggregateData() {
+/// If we want the data for a specific canton, call the function with the
+/// slug of the canton
+/// TODO: get full names of key values
+async function getAggregateData(cantonSlug=null) {
     let aggregate = {};
 
+    let url = `${API_ENDPOINT}?page=0`;
+
+    // List of property slugs for which aggregate data exist
+    let slugs = ["cantons", "genres", "platforms", "stores", "states", "locations"];
+
+    if (cantonSlug != null) {
+        url = `${API_ENDPOINT}?cantons[]=${cantonSlug}&page=0`
+        // Remove games per cantons property, as it doesn't make sense for a single canton
+        slugs = slugs.filter(e => e !== 'cantons');
+    }
+
     // Grab any page, whose results contains global aggregates (number of games per canton, genre, platform, store, state)
-    json = await fetch(`${API_ENDPOINT}?page=0`)
+    json = await fetch(url)
         .then((response) => response.json())
         .catch((error) => console.log(error));
 
     // Grab common aggregate data object
     const rawAggs = json["aggregations"]["aggs_all"];
-
-    // List of property slugs for which aggregate data exist
-    const slugs = ["cantons", "genres", "platforms", "stores", "states", "locations"];
 
     for (const slug of slugs) {
         // Make the slug singular (cantons -> canton). More natural when accessing properties later.
@@ -97,6 +107,9 @@ async function getGlobalAggregateData() {
         for (const obj of aggregateData) {
             const key = obj["key"];
             const numGames = obj["doc_count"];
+
+            // Don't remember properties where the number of games is 0
+            if (numGames == 0) continue;
             
             // Set the total number of games for that property
             aggregate[`games_per_${singular_slug}`][key] = numGames
@@ -118,106 +131,5 @@ async function getGlobalAggregateData() {
     return aggregate;
 }
 
-// async function getCantonGamesList(cantonSlug) {
-//     let promises = []
 
-//     // Grab n pages, and extract all the games
-//     // Or: Grab pages one by one, until we get empty hits
-//     // hits["total"] gives us exactly how many games are in that canton in total !!!!
-//     // We can use this to figure out how many pages to get
-//     // We know the API sends 24 results per page.
-//     // So we need to iterate ceil(total/24)
-//     let numPagesToGet = 1;
-
-//     fetch(`${API_ENDPOINT}?cantons[]=${cantonSlug}&page=${i}`)
-//         .then(response => response.json())
-//         .catch(e => console.log(e))
-//         .then(json => {
-
-//         })
-//     for (i = 0; i < numPagesToGet; i++){
-
-//     }
-
-
-// }
-
-async function getData() {
-    let games = [];
-    let cantons = {};
-    let promises = [];
-
-    // Grab all the data. Since there aren't more specific API endpoints
-    // There's about 31 pages of data
-    for (i = 0; i < 32; i++) {
-
-        promise = fetch(`${API_ENDPOINT}?page=${i}`)
-            .then((response) => response.json())
-            .catch((error) => console.log(error));
-
-        promises.push(promise);
-    }
-
-    // Wait for all requests to be completed
-    await Promise.all(promises).then((jsons) => {
-
-        // Get total of games per canton
-        const cantonsAggregate = jsons[0]["aggregations"]["aggs_all"]["all_filtered_cantons"]["all_nested_cantons"]["cantons_name_keyword"]["buckets"];
-
-        for (obj of cantonsAggregate) {
-            const cantonSlug = obj["key"];
-            const numGames = obj["doc_count"];
-
-            if (cantonSlug in cantons) {
-                continue;
-            } else {
-                // Set the total number of games for that canton
-                cantons[cantonSlug] = numGames
-            }
-        }
-
-        for (json of jsons) {
-            //console.log(json);
-
-            const hits = json["hits"]["hits"];
-
-            if (hits.length == 0) {
-                //console.log('EMPTY');
-                return;
-            }
-
-            for (hit of hits) {
-                games.push(hit["_source"]);
-            }
-        }
-    });
-
-    return { games, cantons };
-}
-
-function storeLocalData(key, data) {
-    // Put the object into storage
-    localStorage.setItem(key, JSON.stringify(data));
-}
-function retrieveLocalData(key) {
-    return JSON.parse(localStorage.getItem(key));
-}
-
-async function getCachedData() {
-    if (localStorage.getItem("games") === null) {
-        data = await getData();
-
-        storeLocalData("games", data.games);
-        storeLocalData("cantons", data.cantons);
-    } else {
-        games = retrieveLocalData("games");
-        cantons = retrieveLocalData("cantons");
-
-        data = { games, cantons };
-    }
-
-    return data;
-}
-
-
-//getCantonAggregateData().then(d => console.log(d))
+getAggregateData("fribourg").then(d => console.log(d))

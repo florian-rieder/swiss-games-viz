@@ -14,7 +14,7 @@ let path = null;
 
 // Load data from the SwissGamesGarden API and geodata from file
 Promise.all([
-    getGlobalAggregateData(),
+    getAggregateData(),
     d3.json('assets/geometry/cantons.geojson'),
     d3.json('assets/geometry/lakes.geojson')
 ]).then((datas) => {
@@ -106,7 +106,7 @@ function onCantonMouseOver(event, d) {
     // Calculate the centroid of the canton geometry
     const centroid = path.centroid(d);
 
-    // Update tooltip and move it to the centroid
+    // Update tooltip and move it to the centroid of the canton
     tooltip.html(d.properties.name + " " + numGames)
         .style("left", (centroid[0] - tooltip.node().offsetWidth / 2) + "px")
         .style("top", (centroid[1] - tooltip.node().offsetHeight / 2) + "px");
@@ -123,5 +123,5 @@ function onCantonMouseOut(event, d) {
 }
 
 function onCantonClick(event, d) {
-    console.log(d);
+    console.log(d.properties);
 }
