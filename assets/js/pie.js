@@ -10,7 +10,7 @@ const pieTooltip = d3.select("#pie").append("div")
 
 // Generate pie chart
 let pie = d3.pie()
-    .padAngle(0.03)
+    .padAngle(0.01)
     .value(d => d.value);
 
 let piePath = d3.arc()
@@ -19,9 +19,8 @@ let piePath = d3.arc()
 
 function bakePie(ingredients) {
     // Convert data to an array of objects
-    const dataArray = Object.entries(ingredients).map(([category, value]) => ({ category, value }));
+    const dataArray = Object.entries(ingredients).map(([category, data]) => ({ category, value: data.num_games, key_name: data.key_name }));
     const colorRange = [...Array(Object.keys(ingredients).length)].map((_, i) => `hsl(${i * (360 / Object.keys(ingredients).length)}, 70%, 50%)`)
-
 
     // Generate colors dynamically
     const color = d3.scaleOrdinal()
@@ -68,17 +67,17 @@ function onPieMouseOver(event, d) {
     const centroid = piePath.centroid(d);
 
     // Update tooltip and move it to the centroid
-    pieTooltip.html(d.data.category + " " + d.data.value)
+    pieTooltip.html(d.data.key_name + " " + d.data.value)
         .style("left", (centroid[0] + pieWidth / 2) + "px")
         .style("top", (centroid[1] + pieHeight / 2) + "px");
 }
 
 function onPieMouseOut(event, d) {
     d3.select(this).transition()
-        .duration('200')
-        .attr('opacity', '1');
+        .duration(200)
+        .attr('opacity', 1);
 
     pieTooltip.transition()
-        .duration('50')
+        .duration(50)
         .style("opacity", 0);
 }

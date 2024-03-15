@@ -27,8 +27,12 @@ Promise.all([
 
     // merge data to geodata
     for (const featureIdx in geodata.features) {
-        const gamesPerCanton = data.games_per_canton[id2canton(geodata.features[featureIdx].properties.id)];
-        geodata.features[featureIdx]["properties"]["num_games"] = gamesPerCanton || 0;
+        const slug = id2canton(geodata.features[featureIdx].properties.id)
+        let numGames = 0
+        if (slug in data.games_per_canton) {
+            numGames = data.games_per_canton[slug]["num_games"];
+        }
+        geodata.features[featureIdx]["properties"]["num_games"] = numGames;
     }
 
     // Define a geographical projection
@@ -44,7 +48,7 @@ Promise.all([
         .projection(projection);
 
     // Color scale
-    const values = Object.values(data.games_per_canton);
+    values = Object.entries(data.games_per_canton).map(([slug, data]) => (data.num_games))
     const range = d3.extent(values);
     const zeroColor = "#262626";
     const colorRange = ["#1c0709", "#f53347"];

@@ -108,11 +108,29 @@ async function getAggregateData(cantonSlug=null) {
             const key = obj["key"];
             const numGames = obj["doc_count"];
 
+            // Grab the full display name of the key (e.g. shoot-em-up => Shoot-em-Up)
+            
+            let keyFullName;
+            if (`${slug}_facet_data` in obj) {
+                const keyFullNameHits = obj[`${slug}_facet_data`]["hits"]["hits"]
+                // Grab the full name of the key if it exists.
+                // (Doesn't exist, for instance, for "3d")
+                if (keyFullNameHits.length == 0){
+                    keyFullName = key;
+                } else {
+                    keyFullName = keyFullNameHits[0]["_source"]["name"];
+                }
+            }
+            
+
             // Don't remember properties where the number of games is 0
             if (numGames == 0) continue;
             
             // Set the total number of games for that property
-            aggregate[`games_per_${singular_slug}`][key] = numGames
+            aggregate[`games_per_${singular_slug}`][key] = {
+                num_games: numGames,
+                key_name: keyFullName
+            }
         }
     }
 
@@ -132,4 +150,4 @@ async function getAggregateData(cantonSlug=null) {
 }
 
 
-getAggregateData("fribourg").then(d => console.log(d))
+//getAggregateData("fribourg").then(d => console.log(d))
