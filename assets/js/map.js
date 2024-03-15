@@ -130,7 +130,7 @@ function onCantonMouseOut(event, d) {
 function onCantonClick(event, d) {
     if (d.properties.num_games == 0) return;
 
-    getAggregateData(id2canton(d.properties.id)).then((data) => {
+    getAggregateData({"cantons": id2canton(d.properties.id)}).then((data) => {
         document.querySelector(".details > h2").innerHTML = d.properties.name
 
         bakePie(data.games_per_genre);

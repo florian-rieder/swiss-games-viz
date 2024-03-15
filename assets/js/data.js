@@ -73,31 +73,15 @@ function id2canton(cantonId) {
 /// If we want the data for a specific canton, call the function with the
 /// slug of the canton
 /// TODO: get full names of key values
-async function getAggregateData(cantonSlug = null, options = null) {
-    if (options == null) {
-        options = {
-            page: 0,
-            cantons: null,
-            platforms: null,
-            stores: null,
-            genres: null,
-            states: null,
-            locations: null,
-            release_year_start: null,
-            release_year_end: null,
-        }
-    }
-
-    //https://api.swissgames.garden/search/games?cantons[]=vaud&cantons[]=foreign&page=0&platforms[]=acorn_archimedes&release_year_range%5Bend%5D=2015&release_year_range%5Bstart%5D=1988&states[]=canceled&stores[]=facebook
+async function getAggregateData(options = null) {
     let aggregate = {};
 
-    let url = `${API_ENDPOINT}?page=0`;
+    const url = buildApiUrl(options)
 
     // List of property slugs for which aggregate data exist
     let slugs = ["cantons", "genres", "platforms", "stores", "states", "locations"];
 
-    if (cantonSlug != null) {
-        url = `${API_ENDPOINT}?cantons[]=${cantonSlug}&page=0`
+    if (options != null && "cantons" in Object.keys(options)) {
         // Remove games per cantons property, as it doesn't make sense for a single canton
         slugs = slugs.filter(e => e !== 'cantons');
     }
@@ -136,7 +120,6 @@ async function getAggregateData(cantonSlug = null, options = null) {
                     keyFullName = keyFullNameHits[0]["_source"]["name"];
                 }
             }
-
 
             // Don't remember properties where the number of games is 0
             if (numGames == 0) continue;
@@ -177,12 +160,12 @@ function buildApiUrl(options = null) {
         realease_year_end: { fieldname: "release_year_range", brackets: "[end]" }
     }
 
+    // Make sure we at least have the mandatory page parameter
     if (options == null) {
         options = {
             page: 0
         }
     }
-
     if (!("page" in options)) {
         options["page"] = 0;
     }
@@ -207,6 +190,8 @@ function buildApiUrl(options = null) {
 
 
         // Generate query parameters
+
+        // If the user provided a list of values:
         if (Array.isArray(value)) {
             for (item of value) {
                 // First query symbol is ?, and then parameters are separated by a &
@@ -219,7 +204,9 @@ function buildApiUrl(options = null) {
 
                 url += `${field}${brackets}=${item}`
             }
-        } else {
+        }
+        // If the user provided a single value:
+        else {
             // I don't like the duplicated code, but whatever for now.
             if (firstParameter) {
                 url += "?"
@@ -232,14 +219,7 @@ function buildApiUrl(options = null) {
     }
 
     return url;
-
-
-
-
-    //https://api.swissgames.garden/search/games?cantons[]=vaud&cantons[]=foreign&platforms[]=acorn_archimedes&release_year_range%5Bend%5D=2015&release_year_range%5Bstart%5D=1988&states[]=canceled&stores[]=facebook&page=0
 }
 
-console.log(buildApiUrl({ cantons: ["fribourg", "geneva"], genres: "platformer", release_year_start: "2004" }));
-
-
+//console.log(buildApiUrl({ cantons: ["fribourg", "geneva"], genres: "platformer", release_year_start: "2004" }));
 //getAggregateData("fribourg").then(d => console.log(d))
