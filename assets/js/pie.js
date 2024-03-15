@@ -20,7 +20,7 @@ let piePath = d3.arc()
 function bakePie(ingredients) {
     // Convert data to an array of objects
     const dataArray = Object.entries(ingredients).map(([category, data]) => ({ category, value: data.num_games, key_name: data.key_name }));
-    const colorRange = [...Array(Object.keys(ingredients).length)].map((_, i) => `hsl(${i * (360 / Object.keys(ingredients).length)}, 70%, 50%)`)
+    const colorRange = [...Array(Object.keys(ingredients).length)].map((_, i) => `hsl(${i * (360 / Object.keys(ingredients).length)}, 60%, 50%)`)
 
     // Generate colors dynamically
     const color = d3.scaleOrdinal()

@@ -170,9 +170,9 @@ function buildApiUrl(options = null) {
         options["page"] = 0;
     }
 
-    let url = API_ENDPOINT;
+    let url = API_ENDPOINT + "?";
 
-    let firstParameter = true;
+    let queryParams = [];
 
     for ([field, value] of Object.entries(options)) {
         const rule = apiUrlBracketRules[field];
@@ -188,35 +188,21 @@ function buildApiUrl(options = null) {
             brackets = rule;
         }
 
-
         // Generate query parameters
 
         // If the user provided a list of values:
         if (Array.isArray(value)) {
             for (item of value) {
-                // First query symbol is ?, and then parameters are separated by a &
-                if (firstParameter) {
-                    url += "?"
-                    firstParameter = false;
-                } else {
-                    url += "&"
-                }
-
-                url += `${field}${brackets}=${item}`
+                queryParams.push(`${field}${brackets}=${item}`)
             }
         }
         // If the user provided a single value:
         else {
-            // I don't like the duplicated code, but whatever for now.
-            if (firstParameter) {
-                url += "?"
-                firstParameter = false;
-            } else {
-                url += "&"
-            }
-            url += `${field}${brackets}=${value}`
+            queryParams.push(`${field}${brackets}=${value}`)
         }
     }
+
+    url += queryParams.join("&");
 
     return url;
 }

@@ -38,7 +38,7 @@ merged_region['id'] = 15
 gdf_wgs84 = gdf_wgs84.drop(gdf_wgs84[gdf_wgs84['id'].isin([15, 16])].index)
 
 # Append the merged region to the GeoDataFrame
-gdf_wgs84 = pd.concat([gdf_wgs84, merged_region], ignore_index=True)
+gdf_wgs84 = pd.concat([gdf_wgs84, merged_region])
 
 
 # Save as GeoJSON
