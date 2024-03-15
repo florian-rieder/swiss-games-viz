@@ -73,7 +73,22 @@ function id2canton(cantonId) {
 /// If we want the data for a specific canton, call the function with the
 /// slug of the canton
 /// TODO: get full names of key values
-async function getAggregateData(cantonSlug=null) {
+async function getAggregateData(cantonSlug = null, options = null) {
+    if (options == null) {
+        options = {
+            page: 0,
+            cantons: null,
+            platforms: null,
+            stores: null,
+            genres: null,
+            states: null,
+            locations: null,
+            release_year_start: null,
+            release_year_end: null,
+        }
+    }
+
+    //https://api.swissgames.garden/search/games?cantons[]=vaud&cantons[]=foreign&page=0&platforms[]=acorn_archimedes&release_year_range%5Bend%5D=2015&release_year_range%5Bstart%5D=1988&states[]=canceled&stores[]=facebook
     let aggregate = {};
 
     let url = `${API_ENDPOINT}?page=0`;
@@ -109,23 +124,23 @@ async function getAggregateData(cantonSlug=null) {
             const numGames = obj["doc_count"];
 
             // Grab the full display name of the key (e.g. shoot-em-up => Shoot-em-Up)
-            
+
             let keyFullName;
             if (`${slug}_facet_data` in obj) {
                 const keyFullNameHits = obj[`${slug}_facet_data`]["hits"]["hits"]
                 // Grab the full name of the key if it exists.
                 // (Doesn't exist, for instance, for "3d")
-                if (keyFullNameHits.length == 0){
+                if (keyFullNameHits.length == 0) {
                     keyFullName = key;
                 } else {
                     keyFullName = keyFullNameHits[0]["_source"]["name"];
                 }
             }
-            
+
 
             // Don't remember properties where the number of games is 0
             if (numGames == 0) continue;
-            
+
             // Set the total number of games for that property
             aggregate[`games_per_${singular_slug}`][key] = {
                 num_games: numGames,
@@ -148,6 +163,83 @@ async function getAggregateData(cantonSlug=null) {
 
     return aggregate;
 }
+
+function buildApiUrl(options = null) {
+    const apiUrlBracketRules = {
+        page: "",
+        cantons: "[]",
+        platforms: "[]",
+        stores: "[]",
+        genres: "[]",
+        states: "[]",
+        locations: "[]",
+        release_year_start: { fieldname: "release_year_range", brackets: "[start]" },
+        realease_year_end: { fieldname: "release_year_range", brackets: "[end]" }
+    }
+
+    if (options == null) {
+        options = {
+            page: 0
+        }
+    }
+
+    if (!("page" in options)) {
+        options["page"] = 0;
+    }
+
+    let url = API_ENDPOINT;
+
+    let firstParameter = true;
+
+    for ([field, value] of Object.entries(options)) {
+        const rule = apiUrlBracketRules[field];
+        let brackets = "";
+
+        // Override field names for release year start and end
+        if (typeof rule === 'object' &&
+            !Array.isArray(rule) &&
+            rule !== null) {
+            field = rule.fieldname;
+            brackets = rule.brackets;
+        } else {
+            brackets = rule;
+        }
+
+
+        // Generate query parameters
+        if (Array.isArray(value)) {
+            for (item of value) {
+                // First query symbol is ?, and then parameters are separated by a &
+                if (firstParameter) {
+                    url += "?"
+                    firstParameter = false;
+                } else {
+                    url += "&"
+                }
+
+                url += `${field}${brackets}=${item}`
+            }
+        } else {
+            // I don't like the duplicated code, but whatever for now.
+            if (firstParameter) {
+                url += "?"
+                firstParameter = false;
+            } else {
+                url += "&"
+            }
+            url += `${field}${brackets}=${value}`
+        }
+    }
+
+    return url;
+
+
+
+
+    //https://api.swissgames.garden/search/games?cantons[]=vaud&cantons[]=foreign&platforms[]=acorn_archimedes&release_year_range%5Bend%5D=2015&release_year_range%5Bstart%5D=1988&states[]=canceled&stores[]=facebook&page=0
+}
+
+console.log(buildApiUrl({ cantons: ["fribourg", "geneva"], genres: "platformer", release_year_start: "2004" }));
 
 
 //getAggregateData("fribourg").then(d => console.log(d))
