@@ -9,6 +9,7 @@ in the API data.
 import pandas as pd
 import geopandas as gpd
 
+
 # Read the shapefile
 gdf = gpd.read_file('cantons/K4kant20220101gf_ch2007Poly.shp')
 lakes = gpd.read_file('hydro/k4seenyyyymmdd11_ch2007Poly.shp')
@@ -21,6 +22,7 @@ lakes['geometry'] = lakes['geometry'].simplify(tolerance)
 # Reproject to WGS84 (EPSG:4326)
 gdf_wgs84 = gdf.to_crs("EPSG:4326")
 lakes_wgs84 = lakes.to_crs("EPSG:4326")
+
 
 # Merge Appenzell Innerrhoden and Appenzell Ausserrhoden
 regions_to_merge = gdf_wgs84[gdf_wgs84['id'].isin([15, 16])]
