@@ -14,8 +14,9 @@ gdf = gpd.read_file('cantons/K4kant20220101gf_ch2007Poly.shp')
 lakes = gpd.read_file('hydro/k4seenyyyymmdd11_ch2007Poly.shp')
 
 # Simplify the geometry
-tolerance = 200
+tolerance = 300
 gdf['geometry'] = gdf['geometry'].simplify(tolerance)
+lakes['geometry'] = lakes['geometry'].simplify(tolerance)
 
 # Reproject to WGS84 (EPSG:4326)
 gdf_wgs84 = gdf.to_crs("EPSG:4326")
