@@ -41,29 +41,6 @@ function id2canton(cantonId) {
     return null; // Return null if no matching canton id is found
 }
 
-
-// Number of games per canton
-// aargau: 465
-// appenzell: 217
-// "basel-landschaft": 93
-// "basel-stadt": 248
-// bern: 682
-// biel: 155
-// foreign: 341
-// fribourg: 992
-// geneva: 1612
-// luzern: 496
-// neuch_tel: 248
-// schaffhausen: 93
-// solothurn: 31
-// st_gallen: 155
-// thurgau: 62
-// ticino: 341
-// valais: 155
-// vaud: 3782
-// z_rich: 7347
-// zug: 31
-
 /// Grab aggregate data for:
 /// - Number of games per canton (only in global)
 /// - Number of games per genre

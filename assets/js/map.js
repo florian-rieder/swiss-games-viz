@@ -12,28 +12,15 @@ const tooltip = d3.select("#map").append("div")
 
 let path = null;
 
-// Load data from the SwissGamesGarden API and geodata from file
-Promise.all([
-    getAggregateData(),
-    d3.json('assets/geometry/cantons.geojson'),
-    d3.json('assets/geometry/lakes.geojson')
-]).then((datas) => {
-    let data = datas[0];
-    let geodata = datas[1];
-    let lakes = datas[2];
-
-    console.log(data);
-    bakePie(data.games_per_canton);
-    drawHistogram(data.games_per_year);
-
+function drawMap(data, cantons, lakes) {
     // merge data to geodata
-    for (const featureIdx in geodata.features) {
-        const slug = id2canton(geodata.features[featureIdx].properties.id)
+    for (const featureIdx in cantons.features) {
+        const slug = id2canton(cantons.features[featureIdx].properties.id)
         let numGames = 0
         if (slug in data.games_per_canton) {
             numGames = data.games_per_canton[slug].num_games;
         }
-        geodata.features[featureIdx].properties.num_games = numGames;
+        cantons.features[featureIdx].properties.num_games = numGames;
     }
 
     // Define a geographical projection
@@ -42,7 +29,7 @@ Promise.all([
         .center([8.226692, 46.80121])
         .translate([width / 2, height / 2])
         // Fit the map to the svg
-        .fitExtent([[mapMargin, mapMargin], [width - mapMargin, height - mapMargin]], geodata);
+        .fitExtent([[mapMargin, mapMargin], [width - mapMargin, height - mapMargin]], cantons);
 
     // Prepare a path object and apply the projection to it.
     path = d3.geoPath()
@@ -74,7 +61,7 @@ Promise.all([
 
     svg.append("g")
         .selectAll("path")
-        .data(geodata.features)
+        .data(cantons.features)
         .enter()
         .append("path")
         .attr("fill", (d) => {
@@ -92,7 +79,7 @@ Promise.all([
         .on('click', onCantonClick)
         .attr("d", d3.geoPath().projection(projection))
         .style("stroke", "white")
-});
+}
 
 function onCantonMouseOver(event, d) {
     d3.select(this).transition()
@@ -131,11 +118,6 @@ function onCantonMouseOut(event, d) {
 function onCantonClick(event, d) {
     if (d.properties.num_games == 0) return;
 
-    getAggregateData({ "cantons": id2canton(d.properties.id) }).then((data) => {
-        document.querySelector(".details > h2").innerHTML = d.properties.name
-
-        bakePie(data.games_per_genre);
-        drawHistogram(data.games_per_year);
-    })
-
+    document.querySelector(".details > h2").innerHTML = d.properties.name
+    selectCanton(id2canton(d.properties.id));
 }
