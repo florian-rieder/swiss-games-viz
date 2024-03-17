@@ -94,8 +94,8 @@ function onBarMouseOver(e, d) {
         .style("opacity", 1);
 
     histogramTooltip.html(d[0] + " " + d[1])
-        .style("left", this.x.baseVal.value - (histogramTooltip.node().offsetWidth / 2) + "px")
-        .style("top", e.target.parentElement.height.baseVal.value/2 - (histogramTooltip.node().offsetHeight / 2) + "px");
+        .style("left", this.x.baseVal.value + this.width.baseVal.value / 2 - histogramTooltip.node().offsetWidth / 2 + "px")
+        .style("top", e.target.parentElement.height.baseVal.value / 2 - histogramTooltip.node().offsetHeight / 2 + "px");
 }
 
 function onBarMouseOut(e, d) {
