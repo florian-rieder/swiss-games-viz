@@ -100,7 +100,6 @@ function drawBars(data) {
     const y = d3.scaleLinear()
         .domain([0, d3.max(Object.values(data))])
         .range([histogramHeight, 0])
-        .nice();
 
     // Select existing bars and update their attributes with transition
     svg.selectAll("rect")
@@ -118,6 +117,8 @@ function drawBars(data) {
         .enter().append("rect")
         .attr("x", d => x(d[0]))
         .attr("width", x.bandwidth())
+        .attr("y", histogramHeight)
+        .attr("height", 0)
         .attr("fill", "rgb(239, 85, 48)")
         .on("mouseover", onBarMouseOver)
         .on("mouseout", onBarMouseOut);
@@ -133,7 +134,7 @@ function drawBars(data) {
         .data(Object.entries(data), d => d)
         .exit()
         .transition()
-        .duration(100)
+        .duration(200)
         .attr("y", histogramHeight) // Move exiting bars to the bottom
         .attr("height", 0) // Set height to 0
         .remove();
