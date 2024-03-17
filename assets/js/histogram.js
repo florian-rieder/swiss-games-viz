@@ -30,14 +30,17 @@ function slideTwo() {
 function fillColor() {
     percent1 = ((sliderStart.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
     percent2 = ((sliderEnd.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
-    sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , #3264fe ${percent1}% , #3264fe ${percent2}%, #dadae5 ${percent2}%)`;
+    sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , rgb(239, 85, 48) ${percent1}% , rgb(239, 85, 48) ${percent2}%, #dadae5 ${percent2}%)`;
 }
+
+const histogramTooltip = d3.select("#histogram").append("div")
+    .attr("class", "data-tooltip")
+    .style("opacity", 0);
 
 
 function drawHistogram(data) {
     const width = document.querySelector("#histogram").offsetWidth;
-    const height = 200;
-    const margin = { top: 0, right: 0, bottom: 50, left: 0 };
+    const height = 150;
 
     const extent = d3.extent(Object.keys(data).map(key => parseInt(key)))
 
@@ -60,32 +63,13 @@ function drawHistogram(data) {
 
     const x = d3.scaleBand()
         .domain(Object.keys(paddedData))
-        .range([margin.left, width - margin.right])
+        .range([0, width])
         .padding(0.1);
 
     const y = d3.scaleLinear()
         .domain([0, d3.max(Object.values(paddedData))])
         .nice()
-        .range([height - margin.bottom, margin.top]);
-
-    svg.append("g")
-        .attr("transform", `translate(${margin.left},0)`)
-        //.call(d3.axisLeft(y))
-        .append("text")
-        .attr("fill", "black")
-        .attr("transform", "rotate(-90)")
-        .attr("y", -margin.left + 10)
-        .attr("x", -height / 2)
-        .attr("dy", "0.71em")
-        .attr("text-anchor", "middle")
-        .text("Number of Games");
-
-    svg.append("g")
-        .attr("transform", `translate(0,${height - margin.bottom})`)
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-        .attr("transform", "rotate(-45)")
-        .style("text-anchor", "end");
+        .range([height, 0]);
 
     svg.selectAll("rect")
         .data(Object.entries(paddedData))
@@ -94,5 +78,32 @@ function drawHistogram(data) {
         .attr("y", d => y(d[1]))
         .attr("height", d => y(0) - y(d[1]))
         .attr("width", x.bandwidth())
-        .attr("fill", "darkred");
+        .attr("fill", "rgb(239, 85, 48)")
+        .on("mouseover", onBarMouseOver)
+        .on("mouseout", onBarMouseOut);
+}
+
+function onBarMouseOver(e, d) {
+    d3.select(this).transition()
+        .duration(200)
+        .attr('opacity', '.75');
+
+    // Make histogramTooltip appear on hover
+    histogramTooltip.transition()
+        .duration(50)
+        .style("opacity", 1);
+
+    histogramTooltip.html(d[0] + " " + d[1])
+        .style("left", this.x.baseVal.value - (histogramTooltip.node().offsetWidth / 2) + "px")
+        .style("top", e.target.parentElement.height.baseVal.value/2 - (histogramTooltip.node().offsetHeight / 2) + "px");
+}
+
+function onBarMouseOut(e, d) {
+    d3.select(this).transition()
+        .duration('200')
+        .attr('opacity', '1');
+
+    histogramTooltip.transition()
+        .duration('50')
+        .style("opacity", 0);
 }

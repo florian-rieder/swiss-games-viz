@@ -47,6 +47,11 @@ footer a:hover {
     color: rgb(193, 193, 193);
 }
 
+#histogram-with-slider {
+    width: 400px;
+    position: relative;
+}
+
 
 .slider-container {
     position: relative;
@@ -97,7 +102,7 @@ input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     height: 1.7em;
     width: 1.7em;
-    background-color: #3264fe;
+    background-color: rgb(239, 85, 48);
     cursor: pointer;
     margin-top: -9px;
     pointer-events: auto;
@@ -110,7 +115,7 @@ input[type="range"]::-moz-range-thumb {
     width: 1.7em;
     cursor: pointer;
     border-radius: 50%;
-    background-color: #3264fe;
+    background-color: rgb(239, 85, 48);
     pointer-events: auto;
     border: none;
 }
@@ -121,13 +126,13 @@ input[type="range"]::-ms-thumb {
     width: 1.7em;
     cursor: pointer;
     border-radius: 50%;
-    background-color: #3264fe;
+    background-color: rgb(239, 85, 48);
     pointer-events: auto;
 }
 
 input[type="range"]:active::-webkit-slider-thumb {
     background-color: #ffffff;
-    border: 1px solid #3264fe;
+    border: 1px solid rgb(239, 85, 48);
 }
 
 .values>#range1 {
