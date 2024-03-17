@@ -1,3 +1,4 @@
+/// SLIDER
 // Slider adapted from: https://codepen.io/alexpg96/pen/xxrBgbP
 window.onload = function () {
     slideOne();
@@ -13,6 +14,17 @@ let sliderTrack = document.querySelector(".slider-track");
 let sliderMaxValue = document.getElementById("slider-1").max;
 let sliderMinValue = document.getElementById("slider-1").min;
 
+// Add event listeners to sliders
+sliderStart.addEventListener('input', function () {
+    slideOne();
+    updateHistogram(currentHistogramData);
+});
+
+sliderEnd.addEventListener('input', function () {
+    slideTwo();
+    updateHistogram(currentHistogramData);
+});
+
 function slideOne() {
     if (parseInt(sliderEnd.value) - parseInt(sliderStart.value) <= minGap) {
         sliderStart.value = parseInt(sliderEnd.value) - minGap;
@@ -20,6 +32,7 @@ function slideOne() {
     displayStart.textContent = sliderStart.value;
     fillColor();
 }
+
 function slideTwo() {
     if (parseInt(sliderEnd.value) - parseInt(sliderStart.value) <= minGap) {
         sliderEnd.value = parseInt(sliderStart.value) + minGap;
@@ -27,60 +40,103 @@ function slideTwo() {
     displayEnd.textContent = sliderEnd.value;
     fillColor();
 }
+
 function fillColor() {
     percent1 = ((sliderStart.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
     percent2 = ((sliderEnd.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
     sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , rgb(239, 85, 48) ${percent1}% , rgb(239, 85, 48) ${percent2}%, #dadae5 ${percent2}%)`;
 }
 
+
+/// HISTOGRAM
+
+const histogramWidth = document.querySelector("#histogram").offsetWidth;
+const histogramHeight = 150;
+
 const histogramTooltip = d3.select("#histogram").append("div")
     .attr("class", "data-tooltip")
     .style("opacity", 0);
 
+let currentHistogramData;
+
+d3.select("#histogram")
+    .append("svg")
+    .attr("width", histogramWidth)
+    .attr("height", histogramHeight);
 
 function drawHistogram(data) {
-    const width = document.querySelector("#histogram").offsetWidth;
-    const height = 150;
-
     const extent = d3.extent(Object.keys(data).map(key => parseInt(key)))
+
+    currentHistogramData = data;
 
     sliderStart.value = extent[0];
     sliderEnd.value = extent[1];
     slideOne();
     slideTwo();
+    updateHistogram(data);
+}
 
-    const paddedData = {};
-    for (let i = extent[0]; i <= extent[1]; i++) {
-        paddedData[i] = data[i] || 0;
+function updateHistogram(data) {
+    // Create the actual data used by the histogram, by getting all years
+    // between start and end, replacing missing values with zeros.
+    const start = parseInt(sliderStart.value);
+    const end = parseInt(sliderEnd.value);
+    const filteredData = {};
+    for (let i = start; i <= end; i++) {
+        filteredData[i] = data[i] || 0;
     }
 
-    d3.select("#histogram > svg").remove();
+    drawBars(filteredData);
+}
 
-    const svg = d3.select("#histogram")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+function drawBars(data) {
+    const svg = d3.select("#histogram > svg");
 
     const x = d3.scaleBand()
-        .domain(Object.keys(paddedData))
-        .range([0, width])
+        .domain(Object.keys(data))
+        .range([0, histogramWidth])
         .padding(0.1);
 
     const y = d3.scaleLinear()
-        .domain([0, d3.max(Object.values(paddedData))])
-        .nice()
-        .range([height, 0]);
+        .domain([0, d3.max(Object.values(data))])
+        .range([histogramHeight, 0])
+        .nice();
 
+    // Select existing bars and update their attributes with transition
     svg.selectAll("rect")
-        .data(Object.entries(paddedData))
-        .enter().append("rect")
+        .data(Object.entries(data), d => d)
+        .transition()
+        .duration(500)
         .attr("x", d => x(d[0]))
         .attr("y", d => y(d[1]))
         .attr("height", d => y(0) - y(d[1]))
+        .attr("width", x.bandwidth());
+
+    // Handle entering bars
+    const enterBars = svg.selectAll("rect")
+        .data(Object.entries(data), d => d)
+        .enter().append("rect")
+        .attr("x", d => x(d[0]))
         .attr("width", x.bandwidth())
         .attr("fill", "rgb(239, 85, 48)")
         .on("mouseover", onBarMouseOver)
         .on("mouseout", onBarMouseOut);
+
+    // Transition entering bars to their correct height
+    enterBars.transition()
+        .duration(500)
+        .attr("y", d => y(d[1]))
+        .attr("height", d => y(0) - y(d[1]));
+
+    // Handle exiting bars
+    svg.selectAll("rect")
+        .data(Object.entries(data), d => d)
+        .exit()
+        .transition()
+        .duration(100)
+        .attr("y", histogramHeight) // Move exiting bars to the bottom
+        .attr("height", 0) // Set height to 0
+        .remove();
 }
 
 function onBarMouseOver(e, d) {

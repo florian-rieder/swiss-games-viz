@@ -184,5 +184,5 @@ function buildQueryUrl(options = null) {
     return url;
 }
 
-console.log(buildQueryUrl({ cantons: ["fribourg", "geneva"], genres: "platformer", release_year_start: "2004" }));
+//console.log(buildQueryUrl({ cantons: ["fribourg", "geneva"], genres: "platformer", release_year_start: "2004" }));
 //getAggregateData("fribourg").then(d => console.log(d))
