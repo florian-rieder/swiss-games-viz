@@ -76,7 +76,7 @@ function id2canton(cantonId) {
 async function getAggregateData(options = null) {
     let aggregate = {};
 
-    const url = buildApiUrl(options)
+    const url = buildQueryUrl(options)
 
     // List of property slugs for which aggregate data exist
     let slugs = ["cantons", "genres", "platforms", "stores", "states", "locations"];
@@ -147,7 +147,7 @@ async function getAggregateData(options = null) {
     return aggregate;
 }
 
-function buildApiUrl(options = null) {
+function buildQueryUrl(options = null) {
     const apiUrlBracketRules = {
         page: "",
         cantons: "[]",
@@ -207,5 +207,5 @@ function buildApiUrl(options = null) {
     return url;
 }
 
-//console.log(buildApiUrl({ cantons: ["fribourg", "geneva"], genres: "platformer", release_year_start: "2004" }));
+console.log(buildQueryUrl({ cantons: ["fribourg", "geneva"], genres: "platformer", release_year_start: "2004" }));
 //getAggregateData("fribourg").then(d => console.log(d))

@@ -23,7 +23,8 @@ Promise.all([
     let lakes = datas[2];
 
     console.log(data);
-    bakePie(data.games_per_canton)
+    bakePie(data.games_per_canton);
+    drawHistogram(data.games_per_year);
 
     // merge data to geodata
     for (const featureIdx in geodata.features) {
@@ -37,11 +38,11 @@ Promise.all([
 
     // Define a geographical projection
     const projection = d3.geoMercator()
-    // The geographical center of Switzerland is around 46.8°, 8.2°
-    .center([8.226692, 46.80121])
-    .translate([width / 2, height / 2])
-    // Fit the map to the svg
-    .fitExtent([[mapMargin, mapMargin], [width-mapMargin, height-mapMargin]], geodata);
+        // The geographical center of Switzerland is around 46.8°, 8.2°
+        .center([8.226692, 46.80121])
+        .translate([width / 2, height / 2])
+        // Fit the map to the svg
+        .fitExtent([[mapMargin, mapMargin], [width - mapMargin, height - mapMargin]], geodata);
 
     // Prepare a path object and apply the projection to it.
     path = d3.geoPath()
@@ -53,7 +54,7 @@ Promise.all([
     const zeroColor = "#262626";
     const colorRange = ["#1c0709", "#f53347"];
     const waterColor = "#949494";
-    
+
     // Define color scale with domain based on min and max values
     // Other options:
     // linear: .scaleLinear()
@@ -62,7 +63,7 @@ Promise.all([
     const colorScale = d3.scalePow().exponent(0.75)
         .domain(range)
         .range(colorRange);
-    
+
     svg.append("g")
         .selectAll("path")
         .data(lakes.features)
@@ -79,7 +80,7 @@ Promise.all([
         .attr("fill", (d) => {
             const numGames = d.properties.num_games;
             // Use black for cantons with 0 games
-            if(numGames === 0){
+            if (numGames === 0) {
                 return zeroColor;
             }
             // Use the color scale to map data values to colors
@@ -130,10 +131,11 @@ function onCantonMouseOut(event, d) {
 function onCantonClick(event, d) {
     if (d.properties.num_games == 0) return;
 
-    getAggregateData({"cantons": id2canton(d.properties.id)}).then((data) => {
+    getAggregateData({ "cantons": id2canton(d.properties.id) }).then((data) => {
         document.querySelector(".details > h2").innerHTML = d.properties.name
 
         bakePie(data.games_per_genre);
+        drawHistogram(data.games_per_year);
     })
 
 }
