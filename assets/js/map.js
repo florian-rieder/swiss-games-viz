@@ -31,9 +31,9 @@ Promise.all([
         const slug = id2canton(geodata.features[featureIdx].properties.id)
         let numGames = 0
         if (slug in data.games_per_canton) {
-            numGames = data.games_per_canton[slug]["num_games"];
+            numGames = data.games_per_canton[slug].num_games;
         }
-        geodata.features[featureIdx]["properties"]["num_games"] = numGames;
+        geodata.features[featureIdx].properties.num_games = numGames;
     }
 
     // Define a geographical projection
@@ -91,7 +91,7 @@ Promise.all([
         .on('mouseout', onCantonMouseOut)
         .on('click', onCantonClick)
         .attr("d", d3.geoPath().projection(projection))
-        .style("stroke", "#fff")
+        .style("stroke", "white")
 });
 
 function onCantonMouseOver(event, d) {

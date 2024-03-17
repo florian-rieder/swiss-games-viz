@@ -35,9 +35,9 @@ function fillColor() {
 
 
 function drawHistogram(data) {
-    const width = 800;
+    const width = document.querySelector("#histogram").offsetWidth;
     const height = 200;
-    const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+    const margin = { top: 0, right: 0, bottom: 50, left: 0 };
 
     const extent = d3.extent(Object.keys(data).map(key => parseInt(key)))
 
@@ -70,7 +70,7 @@ function drawHistogram(data) {
 
     svg.append("g")
         .attr("transform", `translate(${margin.left},0)`)
-        .call(d3.axisLeft(y))
+        //.call(d3.axisLeft(y))
         .append("text")
         .attr("fill", "black")
         .attr("transform", "rotate(-90)")

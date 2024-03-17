@@ -48,11 +48,10 @@ footer a:hover {
 }
 
 
-.container {
+.slider-container {
     position: relative;
     width: 100%;
     height: 50px;
-    margin-top: 30px;
 }
 
 input[type="range"] {
