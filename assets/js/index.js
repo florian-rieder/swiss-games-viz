@@ -22,7 +22,7 @@ getAggregateData().then((data) => {
     slideTwo();
 
     // Show visualisations
-    bakePie(data.games_per_canton);
+    bakePie(data.games_per_genre);
     drawHistogram(data.games_per_year);
 
     // Load data  and geodata from file
