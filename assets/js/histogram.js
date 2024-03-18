@@ -11,8 +11,7 @@ let displayStart = document.getElementById("range1");
 let displayEnd = document.getElementById("range2");
 let minGap = 0;
 let sliderTrack = document.querySelector(".slider-track");
-let sliderMaxValue = document.getElementById("slider-1").max;
-let sliderMinValue = document.getElementById("slider-1").min;
+let sliderSubmit = document.getElementById("submit-slider");
 
 // Add event listeners to sliders
 sliderStart.addEventListener('input', function () {
@@ -31,6 +30,12 @@ function slideOne() {
     }
     displayStart.textContent = sliderStart.value;
     fillColor();
+
+    if (sliderStart.value != currentStartYear || sliderEnd.value != currentEndYear) {
+        sliderSubmit.classList.remove("hidden");
+    } else {
+        sliderSubmit.classList.add("hidden");
+    }
 }
 
 function slideTwo() {
@@ -39,11 +44,17 @@ function slideTwo() {
     }
     displayEnd.textContent = sliderEnd.value;
     fillColor();
+
+    if (sliderStart.value != currentStartYear || sliderEnd.value != currentEndYear) {
+        sliderSubmit.classList.remove("hidden");
+    } else {
+        sliderSubmit.classList.add("hidden");
+    }
 }
 
 function fillColor() {
-    percent1 = ((sliderStart.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
-    percent2 = ((sliderEnd.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
+    percent1 = ((sliderStart.value - sliderStart.min) / (sliderStart.max - sliderStart.min)) * 100;
+    percent2 = ((sliderEnd.value - sliderEnd.min) / (sliderEnd.max - sliderEnd.min)) * 100;
     sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , rgb(239, 85, 48) ${percent1}% , rgb(239, 85, 48) ${percent2}%, #dadae5 ${percent2}%)`;
 }
 

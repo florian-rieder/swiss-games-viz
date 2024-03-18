@@ -39,7 +39,7 @@ function drawMap(data, cantons, lakes) {
     values = Object.entries(data.games_per_canton).map(([slug, data]) => (data.num_games))
     const range = d3.extent(values);
     const zeroColor = "#262626";
-    const colorRange = ["#1c0709", "#f53347"];
+    const colorRange = ["rgb(36, 0, 0)", "rgb(224, 31, 31)"];
     const waterColor = "#949494";
 
     // Define color scale with domain based on min and max values
@@ -73,6 +73,8 @@ function drawMap(data, cantons, lakes) {
             // Use the color scale to map data values to colors
             return colorScale(numGames);
         })
+        // Pointer on clickable cantons
+        .style("cursor", d => d.properties.num_games > 0 ? "pointer" : "inherit")
         // Hover effect on cantons
         .on('mouseover', onCantonMouseOver)
         .on('mouseout', onCantonMouseOut)

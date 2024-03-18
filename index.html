@@ -32,12 +32,15 @@
             <div id="histogram" class="chart-container"></div> <!-- Histogram of release years for the canton -->
             <div class="slider-container">
                 <div class="slider-track"></div>
-                <input type="range" min="1967" max="2024" value="1967" id="slider-1" oninput="slideOne()">
-                <input type="range" min="1967" max="2024" value="2024" id="slider-2" oninput="slideTwo()">
+                <input type="range" id="slider-1" oninput="slideOne()">
+                <input type="range" id="slider-2" oninput="slideTwo()">
             </div>
             <div class="values">
                 <span id="range1">1967</span>
                 <span id="range2">2024</span>
+            </div>
+            <div style="display:block">
+                <button id="submit-slider">Submit</button>
             </div>
         </div>
         <!-- <div> List of games made in the Canton </div> -->
