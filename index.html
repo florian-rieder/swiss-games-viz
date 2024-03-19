@@ -23,29 +23,31 @@
 <body>
     <h1 id="title">Swiss Games Viz</h1>
 
-    <div id="map" class="chart-container"></div>
-
-    <div class="details">
-        <h2>Suisse</h2>
-        <div id="pie" class="chart-container"></div> <!-- Pie chart of genres of games made in the canton -->
-        <div id="histogram-with-slider">
-            <div id="histogram" class="chart-container"></div> <!-- Histogram of release years for the canton -->
-
-            <div class="slider-container">
-                <div class="slider-track"></div>
-                <input type="range" id="slider-1" oninput="slideOne()">
-                <input type="range" id="slider-2" oninput="slideTwo()">
-            </div>
-
-            <div class="values">
-                <span id="range1">1967</span>
-                <span id="range2">2024</span>
-            </div>
-
-            <button id="submit-slider" class="hidden">Submit</button>
-
+    <div class="main-container">
+        <div class="main">
+            <div id="map" class="chart-container"></div>
         </div>
-        <!-- <div> List of games made in the Canton </div> -->
+        <div class="sidebar">
+            <h2>Suisse</h2>
+            <div id="pie" class="chart-container"></div> <!-- Pie chart of genres -->
+            <div id="histogram-with-slider">
+                <div id="histogram" class="chart-container"></div> <!-- Histogram of release years -->
+    
+                <div class="slider-container">
+                    <div class="slider-track"></div>
+                    <input type="range" id="slider-1" oninput="slideOne()">
+                    <input type="range" id="slider-2" oninput="slideTwo()">
+                </div>
+    
+                <div class="values">
+                    <span id="range1">1967</span>
+                    <span id="range2">2024</span>
+                </div>
+    
+                <button id="submit-slider" class="hidden">Submit</button>
+    
+            </div>
+        </div>
     </div>
 
     <footer>

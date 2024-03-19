@@ -1,4 +1,4 @@
-const width = window.innerWidth,
+const width = document.getElementById("map").offsetWidth,
     height = window.innerHeight,
     mapMargin = 20;
 
@@ -135,6 +135,6 @@ function onCantonMouseOut(event, d) {
 function onCantonClick(event, d) {
     if (d.properties.num_games == 0) return;
 
-    document.querySelector(".details > h2").innerHTML = d.properties.name
+    document.querySelector(".sidebar > h2").innerHTML = d.properties.name
     selectCanton(id2canton(d.properties.id));
 }

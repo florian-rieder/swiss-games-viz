@@ -40,8 +40,18 @@ button#submit-slider:hover {
     position: relative;
 }
 
-.details {
+.main-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.main {
+    flex-grow: 1;
+}
+.sidebar {
+    width: 400px;
     padding: 1em;
+    padding-right: 2em;
 }
 
 .data-tooltip {

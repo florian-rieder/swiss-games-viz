@@ -2,7 +2,7 @@
 const pieWidth = 400;
 const pieHeight = 400;
 const donutWidth = 75;
-const radius = Math.min(pieWidth, pieHeight) / 2;
+const radius = 350/2;
 
 // Setting this to radius makes for REALLY clean transitions.
 // But other values also give interesting results.
