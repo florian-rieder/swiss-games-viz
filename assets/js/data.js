@@ -4,8 +4,8 @@ NUM_HITS_PER_PAGE = 24;
 
 canton2id = {
     "z_rich": 1,
-    "biel": 2, // Biel is a town in Berne canton... Idk why it's there
     "bern": 2,
+    "biel": 2, // Biel is a town in Berne canton... Idk why it's there
     "luzern": 3,
     "uri": 4,
     "schwyz": 5,
@@ -34,7 +34,11 @@ canton2id = {
 
 function id2canton(cantonId) {
     for (const [canton, id] of Object.entries(canton2id)) {
-        if (id === cantonId) {
+        if (cantonId === 2) {
+            // Since Biel is not actually a canton, but a city in the canton
+            // of Bern, we need to add this special clause
+            return ["bern", "biel"];
+        } else if (cantonId === id) {
             return canton;
         }
     }

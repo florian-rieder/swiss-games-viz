@@ -15,11 +15,24 @@ let path = null;
 function drawMap(data, cantons, lakes) {
     // merge data to geodata
     for (const featureIdx in cantons.features) {
-        const slug = id2canton(cantons.features[featureIdx].properties.id)
+        const cantonId = cantons.features[featureIdx].properties.id
+        const slug = id2canton(cantonId)
         let numGames = 0
-        if (slug in data.games_per_canton) {
-            numGames = data.games_per_canton[slug].num_games;
+
+        // This atrocity is all because Biel is classified as a canton,
+        // when it is part of the Bern canton !
+        if (Array.isArray(slug)) {
+            for (var s of slug) {
+                if (s in data.games_per_canton) {
+                    numGames += data.games_per_canton[s].num_games;
+                }
+            }
+        } else {
+            if (slug in data.games_per_canton) {
+                numGames = data.games_per_canton[slug].num_games;
+            }
         }
+
         cantons.features[featureIdx].properties.num_games = numGames;
     }
 
@@ -51,6 +64,7 @@ function drawMap(data, cantons, lakes) {
         .domain(range)
         .range(colorRange);
 
+    // Draw lakes
     svg.append("g")
         .selectAll("path")
         .data(lakes.features)
@@ -59,6 +73,7 @@ function drawMap(data, cantons, lakes) {
         .attr("fill", d => waterColor)
         .attr("d", d3.geoPath().projection(projection));
 
+    // Draw cantons
     svg.append("g")
         .selectAll("path")
         .data(cantons.features)
