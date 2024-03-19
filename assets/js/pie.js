@@ -4,6 +4,10 @@ const pieHeight = 400;
 const donutWidth = 75;
 const radius = Math.min(pieWidth, pieHeight) / 2;
 
+// Setting this to radius makes for REALLY clean transitions.
+// But other values also give interesting results.
+const sliceEnterDistance = radius;
+
 const pieTooltip = d3.select("#pie").append("div")
     .attr("class", "data-tooltip")
     .style("opacity", 0);
@@ -25,6 +29,7 @@ const pieSvg = d3.select("#pie")
     .append("g")
     .attr("transform", `translate(${pieWidth / 2}, ${pieHeight / 2})`);
 
+
 function bakePie(ingredients) {
     // Convert data to an array of objects
     const dataArray = Object.entries(ingredients).map(([category, data]) => ({ category, value: data.num_games, key_name: data.key_name }));
@@ -39,22 +44,32 @@ function bakePie(ingredients) {
         .range(colorRange);
 
     // Handle entering arcs
-    pieSvg.selectAll("path")
+    const enteringArcs = pieSvg.selectAll("path")
         .data(pie(dataArray), d => d.data.category)
         .enter()
         .append('path')
         .on("mouseover", onPieMouseOver)
         .on("mouseout", onPieMouseOut)
-        .transition().duration(500)
+        // Set initial transition states
+        .attr("transform", d => {
+            const middleAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+            const translateX = Math.sin(middleAngle) * sliceEnterDistance;
+            const translateY = -Math.cos(middleAngle) * sliceEnterDistance;
+
+            return `translate(${translateX},${translateY}) scale(0)`;
+        });
+
+    enteringArcs.transition().duration(500)
         .attr('fill', d => color(d.data.category))
-        .attr('transform', 'translate(0, 0)')
-        .attr("d", arc);
+        .attr("d", arc)
+        .attr("transform", "translate(0,0) scale(1)")
 
     // Select existing arcs and update their attributes with transition
     pieSvg.selectAll('path')
         .data(pie(dataArray), d => d.data.category)
         .transition().duration(500)
-        .attr('d', arc);
+        .attr('d', arc)
+        .attr("transform", "translate(0,0) scale(1)");
 
     // Handle exiting arcs
     pieSvg.selectAll("path")
@@ -62,10 +77,8 @@ function bakePie(ingredients) {
         .exit()
         .transition().duration(100)
         .style('opacity', 0)
-        //.attr('d', arc)
         .remove();
 }
-
 
 
 function onPieMouseOver(event, d) {
@@ -77,8 +90,6 @@ function onPieMouseOver(event, d) {
     pieTooltip.transition()
         .duration(50)
         .style("opacity", 1);
-
-
 
     const centroid = arc.centroid(d);
 
