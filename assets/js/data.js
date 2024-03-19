@@ -188,5 +188,23 @@ function buildQueryUrl(options = null) {
     return url;
 }
 
+async function getCachedData(options = null) {
+    // We use the session storage to cache the results of requests to the
+    // API, in order to minimize network load.
+    const queryUrl = buildQueryUrl(options);
+    const cachedData = sessionStorage.getItem(queryUrl)
+
+    if (cachedData === null){
+        // Get new data from the API
+        const data = await getAggregateData(options);
+        sessionStorage.setItem(queryUrl, JSON.stringify(data));
+        return data;
+    } else {
+        // Get data from the cache
+        console.debug("Got cached data for " + queryUrl);
+        return JSON.parse(sessionStorage.getItem(queryUrl));
+    }
+}
+
 //console.log(buildQueryUrl({ cantons: ["fribourg", "geneva"], genres: "platformer", release_year_start: "2004" }));
 //getAggregateData("fribourg").then(d => console.log(d))

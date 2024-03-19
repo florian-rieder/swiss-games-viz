@@ -1,9 +1,9 @@
 let globalData;
 let firstYear, lastYear;
-let currentStartYear, currentEndYear;
+let currentStartYear, currentEndYear, currentCanton;
 
 // Load initial data from the SwissGamesGarden API
-getAggregateData().then((data) => {
+getCachedData().then((data) => {
 
     console.log(data);
     globalData = data;
@@ -36,7 +36,13 @@ getAggregateData().then((data) => {
 });
 
 function selectCanton(cantonSlug) {
-    getAggregateData({ "cantons": cantonSlug }).then((data) => {
+    if (cantonSlug != currentCanton) {
+        currentCanton = cantonSlug;
+    } else {
+        // Prevent requesting the same data directly
+        return;
+    }
+    getCachedData({ "cantons": cantonSlug }).then((data) => {
         bakePie(data.games_per_genre);
         drawHistogram(data.games_per_year);
     });

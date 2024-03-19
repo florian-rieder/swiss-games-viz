@@ -82,6 +82,8 @@ function drawHistogram(data) {
 
     sliderStart.value = extent[0];
     sliderEnd.value = extent[1];
+    currentStartYear = extent[0];
+    currentEndYear = extent[1];
     slideOne();
     slideTwo();
     updateHistogram(data);

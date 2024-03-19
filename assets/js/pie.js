@@ -9,7 +9,7 @@ const pieTooltip = d3.select("#pie").append("div")
     .style("opacity", 0);
 
 const pie = d3.pie()
-    .padAngle(0.01)
+    .padAngle(0.005)
     .value(d => d.value)
     .sort(alphabeticalCompare);
 
