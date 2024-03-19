@@ -43,6 +43,14 @@ function bakePie(ingredients) {
         .domain(globalDataArray.map(d => d.category))
         .range(colorRange);
 
+    // Select existing arcs and update their attributes with transition
+    const updatingArcs = pieSvg.selectAll('path')
+        .data(pie(dataArray), d => d.data.category)
+
+    updatingArcs.transition().duration(500)
+        .attr('d', arc)
+        .attr("transform", "translate(0,0) scale(1)");
+
     // Handle entering arcs
     const enteringArcs = pieSvg.selectAll("path")
         .data(pie(dataArray), d => d.data.category)
@@ -51,6 +59,7 @@ function bakePie(ingredients) {
         .on("mouseover", onPieMouseOver)
         .on("mouseout", onPieMouseOut)
         // Set initial transition states
+        .attr("opacity", 0)
         .attr("transform", d => {
             const middleAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
             const translateX = Math.sin(middleAngle) * sliceEnterDistance;
@@ -59,23 +68,18 @@ function bakePie(ingredients) {
             return `translate(${translateX},${translateY}) scale(0)`;
         });
 
-    enteringArcs.transition().duration(500)
+    enteringArcs.transition().delay(250).duration(250)
         .attr('fill', d => color(d.data.category))
         .attr("d", arc)
+        .attr("opacity", 1)
         .attr("transform", "translate(0,0) scale(1)")
 
-    // Select existing arcs and update their attributes with transition
-    pieSvg.selectAll('path')
-        .data(pie(dataArray), d => d.data.category)
-        .transition().duration(500)
-        .attr('d', arc)
-        .attr("transform", "translate(0,0) scale(1)");
-
     // Handle exiting arcs
-    pieSvg.selectAll("path")
+    const exitingArcs = pieSvg.selectAll("path")
         .data(pie(dataArray), d => d.data.category)
         .exit()
-        .transition().duration(100)
+
+    exitingArcs.transition().duration(100)
         .style('opacity', 0)
         .remove();
 }
