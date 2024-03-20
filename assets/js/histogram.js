@@ -1,17 +1,12 @@
 /// SLIDER
 // Slider adapted from: https://codepen.io/alexpg96/pen/xxrBgbP
-window.onload = function () {
-    slideOne();
-    slideTwo();
-};
 
 let sliderStart = document.getElementById("slider-1");
 let sliderEnd = document.getElementById("slider-2");
 let displayStart = document.getElementById("range1");
 let displayEnd = document.getElementById("range2");
-let minGap = 0;
+let sliderMinGap = 0;
 let sliderTrack = document.querySelector(".slider-track");
-let sliderSubmit = document.getElementById("submit-slider");
 
 // Add event listeners to sliders
 sliderStart.addEventListener('input', function () {
@@ -25,30 +20,33 @@ sliderEnd.addEventListener('input', function () {
 });
 
 function slideOne() {
-    if (parseInt(sliderEnd.value) - parseInt(sliderStart.value) <= minGap) {
-        sliderStart.value = parseInt(sliderEnd.value) - minGap;
+    if (parseInt(sliderEnd.value) - parseInt(sliderStart.value) <= sliderMinGap) {
+        sliderStart.value = parseInt(sliderEnd.value) - sliderMinGap;
     }
     displayStart.textContent = sliderStart.value;
     fillColor();
 
-    if (sliderStart.value != currentStartYear || sliderEnd.value != currentEndYear) {
-        sliderSubmit.classList.remove("hidden");
-    } else {
-        sliderSubmit.classList.add("hidden");
-    }
+    onInputsChanged();
 }
 
 function slideTwo() {
-    if (parseInt(sliderEnd.value) - parseInt(sliderStart.value) <= minGap) {
-        sliderEnd.value = parseInt(sliderStart.value) + minGap;
+    if (parseInt(sliderEnd.value) - parseInt(sliderStart.value) <= sliderMinGap) {
+        sliderEnd.value = parseInt(sliderStart.value) + sliderMinGap;
     }
     displayEnd.textContent = sliderEnd.value;
     fillColor();
 
-    if (sliderStart.value != currentStartYear || sliderEnd.value != currentEndYear) {
-        sliderSubmit.classList.remove("hidden");
+    onInputsChanged();
+}
+
+function onInputsChanged() {
+    if ((currentParams.release_year_start != null && sliderStart.value != currentParams.release_year_start)
+        || (currentParams.release_year_end != null && sliderEnd.value != currentParams.release_year_end)) {
+        submitBtn.classList.remove("hidden");
+        resetBtn.classList.remove("hidden");
     } else {
-        sliderSubmit.classList.add("hidden");
+        submitBtn.classList.add("hidden");
+        resetBtn.classList.add("hidden");
     }
 }
 
@@ -76,16 +74,14 @@ d3.select("#histogram")
     .attr("height", histogramHeight);
 
 function drawHistogram(data) {
-    const extent = d3.extent(Object.keys(data).map(key => parseInt(key)))
+    //const extent = d3.extent(Object.keys(data).map(key => parseInt(key)))
 
     currentHistogramData = data;
-
-    sliderStart.value = extent[0];
-    sliderEnd.value = extent[1];
-    currentStartYear = extent[0];
-    currentEndYear = extent[1];
+    sliderStart.value = currentParams.release_year_start || sliderStart.min;
+    sliderEnd.value = currentParams.release_year_end || sliderStart.max;
     slideOne();
     slideTwo();
+
     updateHistogram(data);
 }
 

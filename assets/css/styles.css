@@ -16,24 +16,29 @@ button {
     border-radius: 0;
     padding: 1em;
     font-size: 16px;
-}
-
-button#submit-slider {
     background-color: rgb(239, 85, 48);
+    transition-duration: 250ms;
     color: white;
-    float: right;
     font-weight: bold;
-    margin-top: 1em;
-    transition-duration: 200ms;
     opacity: 1;
 }
 
-button#submit-slider:hover {
+#buttons{
+    float: right;
+    margin-top: 1em;
+    transition-duration: 250ms;
+    display: flex;
+    gap: 10px;
+}
+
+button:hover {
     background-color: rgb(184, 70, 41);
+    color: rgb(219, 219, 219);
 }
 
 .hidden {
     opacity: 0 !important;
+    display: none;
 }
 
 .chart-container {

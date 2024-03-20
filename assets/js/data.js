@@ -129,7 +129,7 @@ async function getAggregateData(options = null) {
 }
 
 function buildQueryUrl(options = null) {
-    const apiUrlBracketRules = {
+    const queryBracketRules = {
         page: "",
         cantons: "[]",
         platforms: "[]",
@@ -138,7 +138,7 @@ function buildQueryUrl(options = null) {
         states: "[]",
         locations: "[]",
         release_year_start: { fieldname: "release_year_range", brackets: "[start]" },
-        realease_year_end: { fieldname: "release_year_range", brackets: "[end]" }
+        release_year_end: { fieldname: "release_year_range", brackets: "[end]" }
     }
 
     // Make sure we at least have the mandatory page parameter
@@ -147,7 +147,8 @@ function buildQueryUrl(options = null) {
             page: 0
         }
     }
-    if (!("page" in options)) {
+
+    if (!("page" in options) || options.page == null) {
         options["page"] = 0;
     }
 
@@ -156,7 +157,7 @@ function buildQueryUrl(options = null) {
     let queryParams = [];
 
     for ([field, value] of Object.entries(options)) {
-        const rule = apiUrlBracketRules[field];
+        const rule = queryBracketRules[field];
         let brackets = "";
 
         // Override field names for release year start and end
@@ -178,7 +179,7 @@ function buildQueryUrl(options = null) {
             }
         }
         // If the user provided a single value:
-        else {
+        else if (value != null){
             queryParams.push(`${field}${brackets}=${value}`)
         }
     }

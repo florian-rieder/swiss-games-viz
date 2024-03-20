@@ -23,13 +23,13 @@ function drawMap(data, cantons, lakes) {
         // when it is part of the Bern canton !
         if (Array.isArray(slug)) {
             for (var s of slug) {
-                if (s in data.games_per_canton) {
-                    numGames += data.games_per_canton[s].num_games;
+                if (s in data) {
+                    numGames += data[s].num_games;
                 }
             }
         } else {
-            if (slug in data.games_per_canton) {
-                numGames = data.games_per_canton[slug].num_games;
+            if (slug in data) {
+                numGames = data[slug].num_games;
             }
         }
 
@@ -49,7 +49,7 @@ function drawMap(data, cantons, lakes) {
         .projection(projection);
 
     // Color scale
-    values = Object.entries(data.games_per_canton).map(([slug, data]) => (data.num_games))
+    values = Object.entries(data).map(([slug, d]) => (d.num_games))
     const range = d3.extent(values);
     const zeroColor = "#262626";
     const colorRange = ["rgb(36, 0, 0)", "rgb(224, 31, 31)"];
