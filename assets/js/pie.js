@@ -60,13 +60,7 @@ function bakePie(ingredients) {
         .on("mouseout", onPieMouseOut)
         // Set initial transition states
         .attr("opacity", 0)
-        .attr("transform", d => {
-            const middleAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
-            const translateX = Math.sin(middleAngle) * sliceEnterDistance;
-            const translateY = -Math.cos(middleAngle) * sliceEnterDistance;
-
-            return `translate(${translateX},${translateY}) scale(0)`;
-        });
+        .attr("transform", initialTransform);
 
     enteringArcs.transition().delay(250).duration(250)
         .attr('fill', d => color(d.data.category))
@@ -79,8 +73,9 @@ function bakePie(ingredients) {
         .data(pie(dataArray), d => d.data.category)
         .exit()
 
-    exitingArcs.transition().duration(100)
-        .style('opacity', 0)
+    exitingArcs.transition().duration(250)
+        .attr('opacity', 0)
+        .attr("transform", initialTransform)
         .remove();
 }
 
@@ -122,4 +117,12 @@ function alphabeticalCompare(a, b) {
         return 1;
     }
     return 0;
+}
+
+function initialTransform(d){
+    const middleAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+    const translateX = Math.sin(middleAngle) * sliceEnterDistance;
+    const translateY = -Math.cos(middleAngle) * sliceEnterDistance;
+
+    return `translate(${translateX},${translateY}) scale(0)`;
 }

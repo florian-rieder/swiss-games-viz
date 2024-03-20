@@ -1,4 +1,4 @@
-let globalData;
+let globalData, currentData;
 let firstYear, lastYear;
 let currentStartYear, currentEndYear, currentCanton;
 
@@ -7,6 +7,7 @@ getCachedData().then((data) => {
 
     console.log(data);
     globalData = data;
+    currentData = data;
 
     // Set min and max years based on min and max in the data
     [firstYear, lastYear] = d3.extent(Object.keys(data.games_per_year).map(key => parseInt(key)));
@@ -43,6 +44,8 @@ function selectCanton(cantonSlug) {
         return;
     }
     getCachedData({ "cantons": cantonSlug }).then((data) => {
+        currentData = data;
+
         bakePie(data.games_per_genre);
         drawHistogram(data.games_per_year);
     });
