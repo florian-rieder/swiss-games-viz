@@ -39,17 +39,6 @@ function slideTwo() {
     onInputsChanged();
 }
 
-function onInputsChanged() {
-    if ((currentParams.release_year_start != null && sliderStart.value != currentParams.release_year_start)
-        || (currentParams.release_year_end != null && sliderEnd.value != currentParams.release_year_end)) {
-        submitBtn.classList.remove("hidden");
-        resetBtn.classList.remove("hidden");
-    } else {
-        submitBtn.classList.add("hidden");
-        resetBtn.classList.add("hidden");
-    }
-}
-
 function fillColor() {
     percent1 = ((sliderStart.value - sliderStart.min) / (sliderStart.max - sliderStart.min)) * 100;
     percent2 = ((sliderEnd.value - sliderEnd.min) / (sliderEnd.max - sliderEnd.min)) * 100;

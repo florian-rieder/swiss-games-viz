@@ -72,7 +72,7 @@ function updateDataViz() {
 
         // Update visualizations with new data
         bakePie(data.games_per_genre);
-        drawHistogram(data.games_per_year);
+        updateHistogram(data.games_per_year);
         drawMap(data.games_per_canton, cantons, lakes);
     });
 }
@@ -108,3 +108,14 @@ resetBtn.addEventListener("click", e => {
     submitBtn.classList.add("hidden");
     resetBtn.classList.add("hidden");
 });
+
+function onInputsChanged() {
+    if ((currentParams.release_year_start != null && sliderStart.value != currentParams.release_year_start)
+        || (currentParams.release_year_end != null && sliderEnd.value != currentParams.release_year_end)) {
+        submitBtn.classList.remove("hidden");
+        resetBtn.classList.remove("hidden");
+    } else {
+        submitBtn.classList.add("hidden");
+        resetBtn.classList.add("hidden");
+    }
+}
