@@ -1,8 +1,8 @@
 // Set up dimensions and radius
-const pieWidth =  document.querySelector("#pie").offsetWidth;
-const pieHeight = pieWidth;
-const donutWidth = 85;
-const radius = (pieWidth-(pieWidth/6))/2;
+const pieWidth = 400;
+const pieHeight = 400;
+const donutWidth = 75;
+const radius = 350/2;
 
 // Setting this to radius makes for REALLY clean transitions.
 // But other values also give interesting results.
@@ -23,25 +23,11 @@ const arc = d3.arc()
 
 // Create SVG element
 const pieSvg = d3.select("#pie")
-    // Make svg responsive
-    // see https://stackoverflow.com/q/16265123
-    .append("div")
-    // Container class to make it responsive.
-    .classed("svg-container", true) 
     .append("svg")
-    // Responsive SVG needs these 2 attributes and no width and height attr.
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox","0 0 " + pieWidth + " " + pieHeight)
-    // Class to make it responsive.
-    .classed("svg-content-responsive", true)
+    .attr("width", pieWidth)
+    .attr("height", pieHeight)
     .append("g")
     .attr("transform", `translate(${pieWidth / 2}, ${pieHeight / 2})`);
-
-
-    // .append("svg")
-    // .attr("width", pieWidth)
-    // .attr("height", pieHeight)
-    // .append("g")
 
 
 function bakePie(ingredients) {
@@ -108,8 +94,8 @@ function onPieMouseOver(event, d) {
 
     // Update tooltip and move it to the centroid
     pieTooltip.html(d.data.key_name + " " + d.data.value)
-        .style("left", (centroid[0] + document.querySelector("#pie").offsetWidth / 2 - pieTooltip.node().offsetWidth/2) + "px")
-        .style("top", (centroid[1] + document.querySelector("#pie").offsetHeight / 2 - pieTooltip.node().offsetHeight/2) + "px");
+        .style("left", (centroid[0] + pieWidth / 2) + "px")
+        .style("top", (centroid[1] + pieHeight / 2) + "px");
 }
 
 function onPieMouseOut(event, d) {

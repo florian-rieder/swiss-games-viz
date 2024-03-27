@@ -2,19 +2,9 @@ const width = document.getElementById("map").offsetWidth,
     height = window.innerHeight,
     mapMargin = 20;
 
-const svg = d3.select('#map')
-    // Make svg responsive
-    // see https://stackoverflow.com/q/16265123
-    .append("div")
-    // Container class to make it responsive.
-    .classed("svg-container", true) 
-    .append("svg")
-    // Responsive SVG needs these 2 attributes and no width and height attr.
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox","0 0 " + width + " " + height)
-    // Class to make it responsive.
-    .classed("svg-content-responsive", true)
-
+const svg = d3.select('#map').append('svg')
+    .attr('width', width)
+    .attr('height', height);
 
 const tooltip = d3.select("#map").append("div")
     .attr("class", "data-tooltip")

@@ -71,7 +71,7 @@ function updateDataViz() {
         currentData = data;
 
         // Update visualizations with new data
-        bakePie(data.games_per_genre, id="#pie");
+        bakePie(data.games_per_genre);
         updateHistogram(data.games_per_year);
         drawMap(data.games_per_canton, cantons, lakes);
     });
