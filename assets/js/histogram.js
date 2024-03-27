@@ -58,9 +58,17 @@ const histogramTooltip = d3.select("#histogram").append("div")
 let currentHistogramData;
 
 d3.select("#histogram")
+    // Make svg responsive
+    // see https://stackoverflow.com/q/16265123
+    .append("div")
+    // Container class to make it responsive.
+    .classed("svg-container", true)
     .append("svg")
-    .attr("width", histogramWidth)
-    .attr("height", histogramHeight);
+    // Responsive SVG needs these 2 attributes and no width and height attr.
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 " + histogramWidth + " " + histogramHeight)
+    // Class to make it responsive.
+    .classed("svg-content-responsive", true)
 
 function drawHistogram(data) {
     //const extent = d3.extent(Object.keys(data).map(key => parseInt(key)))
@@ -88,7 +96,7 @@ function updateHistogram(data) {
 }
 
 function drawBars(data) {
-    const svg = d3.select("#histogram > svg");
+    const svg = d3.select("#histogram svg");
 
     const x = d3.scaleBand()
         .domain(Object.keys(data))
