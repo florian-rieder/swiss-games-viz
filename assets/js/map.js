@@ -1,17 +1,28 @@
-const width = document.getElementById("map").offsetWidth,
-    height = window.innerHeight,
+const ratio = 1.66 // About the ratio of a map of switzerland
     mapMargin = 20;
+let width = document.getElementById("map").offsetWidth,
+    height = Math.ceil(width / ratio);
 
 const svg = d3.select('#map').append('svg')
     .attr('width', width)
     .attr('height', height)
     // Add an event listener to the SVG element to detect clicks outside of the map regions
-    .on("click", function(event) {
+    .on("click", event =>  {
         // Check if the click event target is not within the map regions
         if (!event.target.closest("path")) {
             onOutsideClick();
         }
-    });
+    })
+
+// function updateWindow(){
+//     // x = w.innerWidth || e.clientWidth || g.clientWidth;
+//     // y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+//     svg.attr("width", 0).attr("height", height);
+//     width = document.getElementById("map").offsetWidth,
+//     height = Math.ceil(width / ratio);
+//     svg.attr("width", width).attr("height", height);
+// }
+// d3.select(window).on("resize", updateWindow);
 
 const tooltip = d3.select("#map").append("div")
     .attr("class", "data-tooltip")
@@ -152,7 +163,6 @@ function onCantonClick(event, d) {
     // Select the canton and refresh viz
     selectCanton(id2canton(d.properties.id));
 }
-
 
 // Function to handle click outside of map regions
 function onOutsideClick() {
