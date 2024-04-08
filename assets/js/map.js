@@ -4,7 +4,14 @@ const width = document.getElementById("map").offsetWidth,
 
 const svg = d3.select('#map').append('svg')
     .attr('width', width)
-    .attr('height', height);
+    .attr('height', height)
+    // Add an event listener to the SVG element to detect clicks outside of the map regions
+    .on("click", function(event) {
+        // Check if the click event target is not within the map regions
+        if (!event.target.closest("path")) {
+            onOutsideClick();
+        }
+    });
 
 const tooltip = d3.select("#map").append("div")
     .attr("class", "data-tooltip")
@@ -99,11 +106,12 @@ function drawMap(data, cantons, lakes) {
 }
 
 function onCantonMouseOver(event, d) {
+    // Transition region to lower opacity
     d3.select(this).transition()
         .duration(200)
         .attr('opacity', '.75');
 
-    // Make tooltip appear on hover
+    // Make tooltip appear
     tooltip.transition()
         .duration(50)
         .style("opacity", 1);
@@ -123,18 +131,34 @@ function onCantonMouseOver(event, d) {
 }
 
 function onCantonMouseOut(event, d) {
+    // Transition region to full opacity
     d3.select(this).transition()
         .duration('200')
         .attr('opacity', '1');
 
+    // Hide tooltip
     tooltip.transition()
         .duration('50')
         .style("opacity", 0);
 }
 
 function onCantonClick(event, d) {
+    // Don't do anything on greyed out cantons (cantons with no games)
     if (d.properties.num_games == 0) return;
 
+    // Set the title to the name of the canton
     document.querySelector(".sidebar > h2").innerHTML = d.properties.name
+
+    // Select the canton and refresh viz
     selectCanton(id2canton(d.properties.id));
+}
+
+
+// Function to handle click outside of map regions
+function onOutsideClick() {
+    // Set the title to "Suisse"
+    document.querySelector(".sidebar > h2").innerHTML = "Suisse";
+
+    // Deselect any selected canton and refresh viz
+    selectCanton(null);
 }
