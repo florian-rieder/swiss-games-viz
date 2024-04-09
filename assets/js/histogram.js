@@ -48,7 +48,7 @@ function fillColor() {
 
 /// HISTOGRAM
 
-const histogramWidth = document.querySelector("#histogram").offsetWidth;
+let histogramWidth = document.querySelector("#histogram").offsetWidth;
 const histogramHeight = 150;
 
 const histogramTooltip = d3.select("#histogram").append("div")
@@ -83,6 +83,12 @@ function updateHistogram(data) {
     for (let i = start; i <= end; i++) {
         filteredData[i] = data[i] || 0;
     }
+
+    histogramWidth = document.querySelector("#histogram").offsetWidth;
+
+    d3.select("#histogram > svg")
+        .attr("width", histogramWidth)
+        .attr("height", histogramHeight);
 
     drawBars(filteredData);
 }

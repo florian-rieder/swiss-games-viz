@@ -41,6 +41,7 @@ getCachedData(currentParams).then((data) => {
     bakePie("pie-genres", data.games_per_genre);
     bakePie("pie-stores", data.games_per_store);
     bakePie("pie-platforms", data.games_per_platform);
+    bakePie("pie-states", data.games_per_state);
     drawHistogram(data.games_per_year);
 
     // Load data  and geodata from file
@@ -76,6 +77,7 @@ function updateDataViz() {
         bakePie("pie-genres", data.games_per_genre);
         bakePie("pie-stores", data.games_per_store);
         bakePie("pie-platforms", data.games_per_platform);
+        bakePie("pie-states", data.games_per_state);
         updateHistogram(data.games_per_year);
         drawMap(data.games_per_canton, cantons, lakes);
     });

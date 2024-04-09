@@ -158,7 +158,7 @@ function onCantonClick(event, d) {
     if (d.properties.num_games == 0) return;
 
     // Set the title to the name of the canton
-    document.querySelector(".sidebar > h2").innerHTML = d.properties.name
+    document.querySelector("#canton-selection-title").innerHTML = d.properties.name
 
     // Select the canton and refresh viz
     selectCanton(id2canton(d.properties.id));
@@ -167,7 +167,7 @@ function onCantonClick(event, d) {
 // Function to handle click outside of map regions
 function onOutsideClick() {
     // Set the title to "Suisse"
-    document.querySelector(".sidebar > h2").innerHTML = "Suisse";
+    document.querySelector("#canton-selection-title").innerHTML = "Suisse";
 
     // Deselect any selected canton and refresh viz
     selectCanton(null);

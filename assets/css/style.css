@@ -153,18 +153,29 @@ button:hover {
   display: none;
 }
 
-.main-container {
-  width: 100%;
+#canton-selection-title {
+  margin: 0;
+}
+
+.pies-container {
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
+  gap: 10px;
 }
-.main-container .main {
-  flex-grow: 1;
+.pies-container h3 {
+  margin: 0;
+  margin-left: -0.5em;
 }
-.main-container .sidebar {
-  width: 400px;
-  padding: 1em;
-  padding-right: 2em;
+
+.main-container {
+  width: 100%;
+}
+.main-container #map-container {
+  height: 66.6666666667vh;
+}
+.main-container #bottom-container {
+  height: 33.3333333333vh;
 }
 .main-container .chart-container {
   position: relative;
@@ -179,10 +190,10 @@ button:hover {
   border-radius: 8px;
   pointer-events: none;
   font-size: 1.3rem;
+  z-index: 999;
 }
 .main-container #histogram-with-slider {
-  width: 400px;
   position: relative;
-  margin-left: 1em;
+  margin-right: 1em;
   margin-bottom: 100px;
 }/*# sourceMappingURL=style.css.map */

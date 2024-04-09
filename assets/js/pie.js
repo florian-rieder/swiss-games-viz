@@ -1,14 +1,14 @@
 // Set up dimensions and radius
-const pieWidth = 250;
-const pieHeight = 250;
-const donutWidth = 50;
-const radius = 200 / 2;
+const pieWidth = 200;
+const pieHeight = 200;
+const donutWidth = pieWidth * 0.25;
+const radius = pieWidth / 2;
 // Setting this to radius makes for REALLY clean transitions.
 // But other values also give interesting results.
 const sliceEnterDistance = radius;
 
 
-const pieIds = ["pie-genres", "pie-stores", "pie-platforms"];
+const pieIds = ["pie-genres", "pie-stores", "pie-platforms", "pie-states"];
 
 for (let id of pieIds) {
     // Create SVG element

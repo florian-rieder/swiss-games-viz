@@ -1,6 +1,9 @@
 
-API_ENDPOINT = "https://api.swissgames.garden/search/games";
-NUM_HITS_PER_PAGE = 24;
+const API_ENDPOINT = "https://api.swissgames.garden/search/games";
+const NUM_HITS_PER_PAGE = 24;
+
+// Should we not cache data ? Used for debugging
+const NO_CACHE = false;
 
 const states = {
     "released": "Released",
@@ -14,7 +17,7 @@ const stores = {
     "amazon": "Amazon",
     "oculus": "Oculus",
     "epic": "Epic",
-    "gog": "GoG",
+    "gog": "GOG.com",
     "microsoft_store": "Microsoft Store",
     "playstation": "Playstation",
     "xbox": "Xbox",
@@ -245,7 +248,7 @@ async function getCachedData(options = null) {
     const queryUrl = buildQueryUrl(options);
     const cachedData = sessionStorage.getItem(queryUrl)
 
-    if (cachedData === null || true) {
+    if (cachedData === null || NO_CACHE) {
         // Get new data from the API
         const data = await getAggregateData(options);
         sessionStorage.setItem(queryUrl, JSON.stringify(data));

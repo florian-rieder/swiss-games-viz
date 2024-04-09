@@ -24,15 +24,15 @@
 
 <body>
     <div class="main-container pure-g">
-        <div class="main pure-u-sm-2-3">
-            <h1 id="title">Swiss Games Viz</h1>
-            <div id="map" class="chart-container"></div>
+        <div class="pure-u-2-3" id="map-container">
+            <div>
+                <h1 id="title">Swiss Games Viz</h1>
+                <div id="map" class="chart-container"></div>
+            </div>
         </div>
-        <div class="sidebar pure-u-sm-1-3">
-            <h2>Suisse</h2>
-            <div id="pie-genres" class="chart-container"></div>
-            <div id="pie-platforms" class="chart-container"></div>
-            <div id="pie-stores" class="chart-container"></div>
+
+        <div class="sidebar pure-u-1-3">
+            <h3>Release years</h3>
             <div id="histogram-with-slider">
                 <div id="histogram" class="chart-container"></div> <!-- Histogram of release years -->
 
@@ -53,12 +53,35 @@
                 </div>
             </div>
         </div>
+
+        <div id="bottom-container" class="pure-u-1-1">
+            <h2 id="canton-selection-title">Suisse</h2>
+            <div class="pies-container">
+                <div>
+                    <h3>Genres</h3>
+                    <div id="pie-genres" class="chart-container"></div>
+                </div>
+                <div>
+                    <h3>Platforms</h3>
+                    <div id="pie-platforms" class="chart-container"></div>
+                </div>
+                <div>
+                    <h3>Stores</h3>
+                    <div id="pie-stores" class="chart-container"></div>
+                </div>
+                <div>
+                    <h3>States</h3>
+                    <div id="pie-states" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <footer>
         <ul>
             <li>Data: <a href="https://swissgames.garden/">Swiss Games Garden</a></li>
-            <li>Layers: <a
+            <li>Map: <a
                     href="https://www.bfs.admin.ch/bfs/en/home/statistics/regional-statistics/base-maps/cartographic-bases.assetdetail.21245514.html">Swiss
                     Federal Statistical Office</a></li>
         </ul>
