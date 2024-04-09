@@ -19,6 +19,11 @@ const submitBtn = document.getElementById("submit");
 const resetBtn = document.getElementById("reset");
 const buttons = document.getElementById("buttons");
 
+window.onresize = () => {
+    // Responsive histogram on resize
+    updateHistogram(currentData.games_per_year);
+}
+
 // Load initial data from the SwissGamesGarden API
 getCachedData(currentParams).then((data) => {
     globalData = data;
