@@ -24,8 +24,6 @@ getCachedData(currentParams).then((data) => {
     globalData = data;
     currentData = data;
 
-    console.log(data);
-
     // Set min and max years based on min and max in the global data
     [firstYear, lastYear] = d3.extent(Object.keys(data.games_per_year).map(key => parseInt(key)));
     currentParams.release_year_start = firstYear;
@@ -41,6 +39,8 @@ getCachedData(currentParams).then((data) => {
 
     // Show visualisations
     bakePie("pie-genres", data.games_per_genre);
+    bakePie("pie-stores", data.games_per_store);
+    bakePie("pie-platforms", data.games_per_platform);
     drawHistogram(data.games_per_year);
 
     // Load data  and geodata from file

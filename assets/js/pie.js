@@ -1,8 +1,8 @@
 // Set up dimensions and radius
-const pieWidth = 400;
-const pieHeight = 400;
-const donutWidth = 75;
-const radius = 350 / 2;
+const pieWidth = 250;
+const pieHeight = 250;
+const donutWidth = 50;
+const radius = 200 / 2;
 // Setting this to radius makes for REALLY clean transitions.
 // But other values also give interesting results.
 const sliceEnterDistance = radius;
@@ -35,22 +35,27 @@ const arc = d3.arc()
     .innerRadius(radius - donutWidth)
     .outerRadius(radius);
 
+const pieColors = {}
 
-
-function bakePie(id, ingredients) {
+function bakePie(id, data) {
     // Convert data to an array of objects
-    const dataArray = Object.entries(ingredients).map(([category, data]) => ({ category, value: data.num_games, key_name: data.key_name }));
+    const dataArray = Object.entries(data).map(([category, data]) => ({ category, value: data.num_games, key_name: data.key_name }));
 
-    // This is dirty but will clean it up later, probably !
-    const globalDataArray = Object.entries(globalData.games_per_genre).map(([category, data]) => ({ category, value: data.num_games, key_name: data.key_name })).sort(alphabeticalCompare);
-    const colorRange = [...Array(Object.keys(globalData.games_per_genre).length)].map((_, i) => `hsl(${i * (360 / Object.keys(globalData.games_per_genre).length)}, 60%, 50%)`)
+    let color;
+    // We need to set the colors once and for all on the first call to this function.
+    if (id in pieColors) {
+        color = pieColors[id];
+    } else {
+        colorRange = [...Array(Object.keys(data).length)].map((_, i) => `hsl(${i * (360 / Object.keys(data).length)}, 60%, 50%)`)    
+        
+        color = d3.scaleOrdinal()
+            .domain(dataArray.sort(alphabeticalCompare).map(d => d.category))
+            .range(colorRange);
+        
+        pieColors[id] = color;
+    }
 
     const svg = d3.select(`#${id} svg g`);
-
-    // Generate colors dynamically
-    const color = d3.scaleOrdinal()
-        .domain(globalDataArray.map(d => d.category))
-        .range(colorRange);
 
     // Select existing arcs and update their attributes with transition
     const updatingArcs = svg.selectAll('path')

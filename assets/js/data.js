@@ -2,7 +2,31 @@
 API_ENDPOINT = "https://api.swissgames.garden/search/games";
 NUM_HITS_PER_PAGE = 24;
 
-canton2id = {
+const states = {
+    "released": "Released",
+    "development": "In development",
+    "prototype": "Prototype",
+    "canceled": "Canceled"
+};
+
+const stores = {
+    "facebook": "Facebook",
+    "amazon": "Amazon",
+    "oculus": "Oculus",
+    "epic": "Epic",
+    "gog": "GoG",
+    "microsoft_store": "Microsoft Store",
+    "playstation": "Playstation",
+    "xbox": "Xbox",
+    "nintendo": "Nintendo",
+    "custom": "Custom",
+    "itchio": "itch.io",
+    "google_play_store": "Google Play Store",
+    "steam": "Steam",
+    "apple_store": "Apple Store"
+}
+
+const canton2id = {
     "z_rich": 1,
     "bern": 2,
     "biel": 2, // Biel is a town in Berne canton... Idk why it's there
@@ -32,6 +56,7 @@ canton2id = {
     "foreign": 99// "foreign" can also happen
 }
 
+/// Get the corresponding canton slug for an id. Returns a list of slugs in weird cases.
 function id2canton(cantonId) {
     for (const [canton, id] of Object.entries(canton2id)) {
         if (cantonId === 2) {
@@ -67,13 +92,14 @@ async function getAggregateData(options = null) {
         slugs = slugs.filter(e => e !== 'cantons');
     }
 
-    // Grab any page, whose results contains global aggregates (number of games per canton, genre, platform, store, state)
+    // Grab any page, whose results contains global aggregates
+    // (number of games per canton, genre, platform, store, state)
     json = await fetch(url)
         .then((response) => response.json())
         .catch((error) => console.log(error));
 
     // Grab common aggregate data object
-    const rawAggs = json["aggregations"]["aggs_all"];
+    const rawAggregates = json["aggregations"]["aggs_all"];
 
     for (const slug of slugs) {
         // Make the slug singular (cantons -> canton). More natural when accessing properties later.
@@ -82,25 +108,14 @@ async function getAggregateData(options = null) {
         aggregate[`games_per_${singular_slug}`] = {};
 
         // Grab the aggregate data for this property (slug)
-        const aggregateData = rawAggs[`all_filtered_${slug}`][`all_nested_${slug}`][`${slug}_name_keyword`]["buckets"];
+        const aggregateData = rawAggregates[`all_filtered_${slug}`][`all_nested_${slug}`][`${slug}_name_keyword`]["buckets"];
 
         for (const obj of aggregateData) {
             const key = obj["key"];
             const numGames = obj["doc_count"];
 
             // Grab the full display name of the key (e.g. shoot-em-up => Shoot-em-Up)
-
-            let keyFullName;
-            if (`${slug}_facet_data` in obj) {
-                const keyFullNameHits = obj[`${slug}_facet_data`]["hits"]["hits"]
-                // Grab the full name of the key if it exists.
-                // (Doesn't exist, for instance, for "3d")
-                if (keyFullNameHits.length == 0) {
-                    keyFullName = key;
-                } else {
-                    keyFullName = keyFullNameHits[0]["_source"]["name"];
-                }
-            }
+            const keyName = getKeyDisplayName(obj, key, slug);
 
             // Don't remember properties where the number of games is 0
             if (numGames == 0) continue;
@@ -108,13 +123,13 @@ async function getAggregateData(options = null) {
             // Set the total number of games for that property
             aggregate[`games_per_${singular_slug}`][key] = {
                 num_games: numGames,
-                key_name: keyFullName
+                key_name: keyName
             }
         }
     }
 
     // Do a little differently for release years, since the data structure is different
-    const yearsAgg = rawAggs["all_filtered_release_years_histogram"]["all_nested_release_years"]["releases_over_time"]["buckets"];
+    const yearsAgg = rawAggregates["all_filtered_release_years_histogram"]["all_nested_release_years"]["releases_over_time"]["buckets"];
     // Initialize nested object (prevents error when trying to access it)
     aggregate[`games_per_year`] = {};
 
@@ -126,6 +141,41 @@ async function getAggregateData(options = null) {
     }
 
     return aggregate;
+}
+
+function getKeyDisplayName(obj, key, slug) {
+    let keyFullName;
+    if (!(`${slug}_facet_data` in obj)) {
+        //console.warn(`Missing facet data for ${slug}`);
+        // and no pretty key name for states and stores...
+        // We have to do it ourselves.
+        if (slug === "stores") {
+            return stores[key];
+        }
+        else if (slug === "states") {
+            return states[key];
+        }
+    }
+
+    const keyFullNameHits = obj[`${slug}_facet_data`]["hits"]["hits"];
+
+    // Grab the full name of the key if it exists.
+    // (Doesn't exist, for instance, for "3d")
+    if (keyFullNameHits.length > 0) {
+        // "platform_name" for platforms
+        if (slug === "platforms") {
+            return keyFullNameHits[0]["_source"]["platform_name"];
+        }
+        
+        // just "name" for the general case (genres, cantons, locations)
+        else {
+            return keyFullNameHits[0]["_source"]["name"];
+        }
+    }
+    // If we really have nothing, just use the system key name
+    else {
+        return key;
+    }
 }
 
 function buildQueryUrl(options = null) {
@@ -179,7 +229,7 @@ function buildQueryUrl(options = null) {
             }
         }
         // If the user provided a single value:
-        else if (value != null){
+        else if (value != null) {
             queryParams.push(`${field}${brackets}=${value}`)
         }
     }
@@ -195,7 +245,7 @@ async function getCachedData(options = null) {
     const queryUrl = buildQueryUrl(options);
     const cachedData = sessionStorage.getItem(queryUrl)
 
-    if (cachedData === null){
+    if (cachedData === null || true) {
         // Get new data from the API
         const data = await getAggregateData(options);
         sessionStorage.setItem(queryUrl, JSON.stringify(data));
