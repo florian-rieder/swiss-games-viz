@@ -1,23 +1,41 @@
 // Set up dimensions and radius
-const pieWidth = 200;
-const pieHeight = 200;
-const donutWidth = pieWidth * 0.25;
-const radius = pieWidth / 2;
+let pieWidth = 100;
+let pieHeight = 100;
+let donutWidth = pieWidth * 0.25;
+let radius = pieWidth / 2;
 // Setting this to radius makes for REALLY clean transitions.
 // But other values also give interesting results.
-const sliceEnterDistance = radius;
+let sliceEnterDistance = radius;
 
 
 const pieIds = ["pie-genres", "pie-stores", "pie-platforms", "pie-states"];
+
+updatePiesSize();
+
+function updatePiesSize() {
+    // Set up dimensions and radius
+    const parent = document.querySelector(`#${pieIds[0]}`).parentElement.parentElement;
+    let width = parent.offsetWidth;
+    let height = parent.offsetHeight;
+
+    if (width > height) {
+        pieWidth = height;
+        pieHeight = height;
+    } else {
+        pieWidth = width;
+        pieHeight = width;
+    }
+    donutWidth = pieWidth * 0.25;
+    radius = pieWidth / 2;
+    sliceEnterDistance = radius;
+}
+
 
 for (let id of pieIds) {
     // Create SVG element
     d3.select(`#${id}`)
         .append("svg")
-        .attr("width", pieWidth)
-        .attr("height", pieHeight)
         .append("g")
-        .attr("transform", `translate(${pieWidth / 2}, ${pieHeight / 2})`);
 
     // Add a tooltip to the pie
     d3.select(`#${id}`)
@@ -31,11 +49,34 @@ const pie = d3.pie()
     .value(d => d.value)
     .sort(alphabeticalCompare);
 
-const arc = d3.arc()
+let arc = d3.arc()
     .innerRadius(radius - donutWidth)
     .outerRadius(radius);
 
 const pieColors = {}
+
+function updatePies() {
+    updatePiesSize();
+
+    for (let id of pieIds) {
+        d3.select(`#${id} svg`)
+            .attr("width", pieWidth)
+            .attr("height", pieHeight);
+        
+        d3.select(`#${id} svg g`)
+            .attr("transform", `translate(${pieWidth / 2}, ${pieHeight / 2})`);
+
+    }
+
+    arc = d3.arc()
+        .innerRadius(radius - donutWidth)
+        .outerRadius(radius);
+
+    bakePie("pie-genres", currentData.games_per_genre);
+    bakePie("pie-stores", currentData.games_per_store);
+    bakePie("pie-platforms", currentData.games_per_platform);
+    bakePie("pie-states", currentData.games_per_state);
+}
 
 function bakePie(id, data) {
     // Convert data to an array of objects

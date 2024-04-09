@@ -7,10 +7,8 @@ let mapHeight = document.querySelector("#map-wrapper").offsetHeight;
 // If the map would be too high with the current width
 if (mapWidth / ratio > mapHeight) {
     // scale to fit the height
-    console.log("over", mapWidth, mapHeight);
     mapWidth = mapHeight * ratio;
 } else {
-    console.log("under", mapWidth, mapHeight);
     mapHeight = mapWidth / ratio;
 }
 
@@ -38,10 +36,8 @@ function updateMap(data) {
     // If the map would be too high with the current width
     if (mapWidth / ratio > mapHeight) {
         // scale to fit the height
-        console.log("over", mapWidth, mapHeight);
         mapWidth = mapHeight * ratio;
     } else {
-        console.log("under", mapWidth, mapHeight);
         mapHeight = mapWidth / ratio;
     }
 

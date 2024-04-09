@@ -22,8 +22,8 @@ const buttons = document.getElementById("buttons");
 window.onresize = () => {
     // Responsive histogram on resize
     updateHistogram(currentData.games_per_year);
-
     updateMap(currentData.games_per_canton);
+    updatePies();
 }
 
 // Load initial data from the SwissGamesGarden API
@@ -45,10 +45,7 @@ getCachedData(currentParams).then((data) => {
     slideTwo();
 
     // Show visualisations
-    bakePie("pie-genres", data.games_per_genre);
-    bakePie("pie-stores", data.games_per_store);
-    bakePie("pie-platforms", data.games_per_platform);
-    bakePie("pie-states", data.games_per_state);
+    updatePies();
     drawHistogram(data.games_per_year);
 
     // Load data  and geodata from file
@@ -81,10 +78,7 @@ function updateDataViz() {
         currentData = data;
 
         // Update visualizations with new data
-        bakePie("pie-genres", data.games_per_genre);
-        bakePie("pie-stores", data.games_per_store);
-        bakePie("pie-platforms", data.games_per_platform);
-        bakePie("pie-states", data.games_per_state);
+        updatePies();
         updateHistogram(data.games_per_year);
         drawMap(data.games_per_canton, cantons, lakes);
     });
