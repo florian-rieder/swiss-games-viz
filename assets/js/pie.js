@@ -2,15 +2,29 @@
 const pieWidth = 400;
 const pieHeight = 400;
 const donutWidth = 75;
-const radius = 350/2;
-
+const radius = 350 / 2;
 // Setting this to radius makes for REALLY clean transitions.
 // But other values also give interesting results.
 const sliceEnterDistance = radius;
 
-const pieTooltip = d3.select("#pie").append("div")
-    .attr("class", "data-tooltip")
-    .style("opacity", 0);
+
+const pieIds = ["pie-genres", "pie-stores", "pie-platforms"];
+
+for (let id of pieIds) {
+    // Create SVG element
+    d3.select(`#${id}`)
+        .append("svg")
+        .attr("width", pieWidth)
+        .attr("height", pieHeight)
+        .append("g")
+        .attr("transform", `translate(${pieWidth / 2}, ${pieHeight / 2})`);
+
+    // Add a tooltip to the pie
+    d3.select(`#${id}`)
+        .append("div")
+        .attr("class", "data-tooltip")
+        .style("opacity", 0);
+}
 
 const pie = d3.pie()
     .padAngle(0.005)
@@ -21,16 +35,9 @@ const arc = d3.arc()
     .innerRadius(radius - donutWidth)
     .outerRadius(radius);
 
-// Create SVG element
-const pieSvg = d3.select("#pie")
-    .append("svg")
-    .attr("width", pieWidth)
-    .attr("height", pieHeight)
-    .append("g")
-    .attr("transform", `translate(${pieWidth / 2}, ${pieHeight / 2})`);
 
 
-function bakePie(ingredients) {
+function bakePie(id, ingredients) {
     // Convert data to an array of objects
     const dataArray = Object.entries(ingredients).map(([category, data]) => ({ category, value: data.num_games, key_name: data.key_name }));
 
@@ -38,13 +45,15 @@ function bakePie(ingredients) {
     const globalDataArray = Object.entries(globalData.games_per_genre).map(([category, data]) => ({ category, value: data.num_games, key_name: data.key_name })).sort(alphabeticalCompare);
     const colorRange = [...Array(Object.keys(globalData.games_per_genre).length)].map((_, i) => `hsl(${i * (360 / Object.keys(globalData.games_per_genre).length)}, 60%, 50%)`)
 
+    const svg = d3.select(`#${id} svg g`);
+
     // Generate colors dynamically
     const color = d3.scaleOrdinal()
         .domain(globalDataArray.map(d => d.category))
         .range(colorRange);
 
     // Select existing arcs and update their attributes with transition
-    const updatingArcs = pieSvg.selectAll('path')
+    const updatingArcs = svg.selectAll('path')
         .data(pie(dataArray), d => d.data.category)
 
     updatingArcs.transition().duration(500)
@@ -52,7 +61,7 @@ function bakePie(ingredients) {
         .attr("transform", "translate(0,0) scale(1)");
 
     // Handle entering arcs
-    const enteringArcs = pieSvg.selectAll("path")
+    const enteringArcs = svg.selectAll("path")
         .data(pie(dataArray), d => d.data.category)
         .enter()
         .append('path')
@@ -69,7 +78,7 @@ function bakePie(ingredients) {
         .attr("transform", "translate(0,0) scale(1)")
 
     // Handle exiting arcs
-    const exitingArcs = pieSvg.selectAll("path")
+    const exitingArcs = svg.selectAll("path")
         .data(pie(dataArray), d => d.data.category)
         .exit()
 
@@ -81,9 +90,14 @@ function bakePie(ingredients) {
 
 
 function onPieMouseOver(event, d) {
+    // Lower opacity of slice
     d3.select(this).transition()
         .duration(200)
         .attr('opacity', '.75');
+
+    // Dirty, but it works
+    const pieId = event.target.parentElement.parentElement.parentElement.id;
+    const pieTooltip = d3.select(`#${pieId} .data-tooltip`)
 
     // Make tooltip appear on hover
     pieTooltip.transition()
@@ -103,11 +117,15 @@ function onPieMouseOut(event, d) {
         .duration(200)
         .attr('opacity', 1);
 
+    const pieId = event.target.parentElement.parentElement.parentElement.id;
+    const pieTooltip = d3.select(`#${pieId} .data-tooltip`);
+
     pieTooltip.transition()
         .duration(50)
         .style("opacity", 0);
 }
 
+// Alphabetical compare function, used to sort keys alphabetically in the pies
 function alphabeticalCompare(a, b) {
     // Alphabetical sort
     if (a.category < b.category) {
@@ -119,7 +137,7 @@ function alphabeticalCompare(a, b) {
     return 0;
 }
 
-function initialTransform(d){
+function initialTransform(d) {
     const middleAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
     const translateX = Math.sin(middleAngle) * sliceEnterDistance;
     const translateY = -Math.cos(middleAngle) * sliceEnterDistance;
