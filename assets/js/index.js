@@ -22,6 +22,8 @@ const buttons = document.getElementById("buttons");
 window.onresize = () => {
     // Responsive histogram on resize
     updateHistogram(currentData.games_per_year);
+
+    updateMap(currentData.games_per_canton);
 }
 
 // Load initial data from the SwissGamesGarden API

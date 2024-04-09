@@ -5,6 +5,7 @@ const NUM_HITS_PER_PAGE = 24;
 // Should we not cache data ? Used for debugging
 const NO_CACHE = false;
 
+// Get pretty state name from key name
 const states = {
     "released": "Released",
     "development": "In development",
@@ -12,6 +13,7 @@ const states = {
     "canceled": "Canceled"
 };
 
+// Get pretty store name from key name
 const stores = {
     "facebook": "Facebook",
     "amazon": "Amazon",
@@ -29,6 +31,7 @@ const stores = {
     "apple_store": "Apple Store"
 }
 
+// Get id from canton API slug
 const canton2id = {
     "z_rich": 1,
     "bern": 2,

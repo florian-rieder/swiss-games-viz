@@ -172,10 +172,22 @@ button:hover {
   width: 100%;
 }
 .main-container #map-container {
-  height: 66.6666666667vh;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+}
+.main-container #map-container #map-wrapper {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+  justify-content: center;
+}
+.main-container #map-container #map-wrapper #map {
+  display: inline-block;
+  margin: auto;
 }
 .main-container #bottom-container {
-  height: 33.3333333333vh;
+  height: 40vh;
 }
 .main-container .chart-container {
   position: relative;

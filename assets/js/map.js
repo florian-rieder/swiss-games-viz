@@ -1,34 +1,59 @@
 const ratio = 1.66 // About the ratio of a map of switzerland
-    mapMargin = 20;
-let width = document.getElementById("map").offsetWidth,
-    height = Math.ceil(width / ratio);
+mapMargin = 20;
+let mapWidth = document.querySelector("#map-wrapper").offsetWidth;
+let mapHeight = document.querySelector("#map-wrapper").offsetHeight;
+
+// Duplicate code. Fix later
+// If the map would be too high with the current width
+if (mapWidth / ratio > mapHeight) {
+    // scale to fit the height
+    console.log("over", mapWidth, mapHeight);
+    mapWidth = mapHeight * ratio;
+} else {
+    console.log("under", mapWidth, mapHeight);
+    mapHeight = mapWidth / ratio;
+}
 
 const svg = d3.select('#map').append('svg')
-    .attr('width', width)
-    .attr('height', height)
+    .attr("width", Math.round(mapWidth))
+    .attr("height", Math.round(mapHeight))
     // Add an event listener to the SVG element to detect clicks outside of the map regions
-    .on("click", event =>  {
+    .on("click", event => {
         // Check if the click event target is not within the map regions
         if (!event.target.closest("path")) {
             onOutsideClick();
         }
-    })
-
-// function updateWindow(){
-//     // x = w.innerWidth || e.clientWidth || g.clientWidth;
-//     // y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-//     svg.attr("width", 0).attr("height", height);
-//     width = document.getElementById("map").offsetWidth,
-//     height = Math.ceil(width / ratio);
-//     svg.attr("width", width).attr("height", height);
-// }
-// d3.select(window).on("resize", updateWindow);
+    });
 
 const tooltip = d3.select("#map").append("div")
     .attr("class", "data-tooltip")
     .style("opacity", 0);
 
 let path = null;
+
+function updateMap(data) {
+    mapWidth = document.querySelector("#map-wrapper").offsetWidth;
+    mapHeight = document.querySelector("#map-wrapper").offsetHeight;
+
+    // If the map would be too high with the current width
+    if (mapWidth / ratio > mapHeight) {
+        // scale to fit the height
+        console.log("over", mapWidth, mapHeight);
+        mapWidth = mapHeight * ratio;
+    } else {
+        console.log("under", mapWidth, mapHeight);
+        mapHeight = mapWidth / ratio;
+    }
+
+    // Resize the map
+    d3.select("#map svg")
+        .attr("width", Math.round(mapWidth))
+        .attr("height", Math.round(mapHeight));
+
+    d3.selectAll("#map svg g").remove();
+
+    drawMap(data, cantons, lakes);
+}
 
 function drawMap(data, cantons, lakes) {
     // merge data to geodata
@@ -58,9 +83,9 @@ function drawMap(data, cantons, lakes) {
     const projection = d3.geoMercator()
         // The geographical center of Switzerland is around 46.8°, 8.2°
         .center([8.226692, 46.80121])
-        .translate([width / 2, height / 2])
+        .translate([mapWidth / 2, mapHeight / 2])
         // Fit the map to the svg
-        .fitExtent([[mapMargin, mapMargin], [width - mapMargin, height - mapMargin]], cantons);
+        .fitExtent([[mapMargin, mapMargin], [mapWidth - mapMargin, mapHeight - mapMargin]], cantons);
 
     // Prepare a path object and apply the projection to it.
     path = d3.geoPath()
