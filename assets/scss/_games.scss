@@ -4,6 +4,30 @@ ul#games-list {
     margin: 0;
 
     li {
-        
+        border: 1px solid white;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: row;
+
+        h2 {
+            margin: 0;
+        }
+
+        .game-content {
+            flex-grow: 1;
+            padding: 1rem;
+        }
+
+        .game-cover {
+            width: 150px;
+            height: 150px;
+
+            img {
+                width: 150px;
+                height: 150px;
+                object-fit: cover;
+            }
+        }
+
     } 
 }
