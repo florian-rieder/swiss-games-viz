@@ -20,8 +20,8 @@ const resetBtn = document.getElementById("reset");
 const buttons = document.getElementById("buttons");
 
 window.onresize = () => {
-    // Responsive histogram on resize
-    updateHistogram(currentData.aggegates.games_per_year);
+    // Responsive visualizations on resize
+    updateHistogram(currentData.aggregates.games_per_year);
     updateMap(currentData.aggregates.games_per_canton);
     updatePies();
 }
@@ -47,6 +47,7 @@ getCachedData(currentParams).then((data) => {
     // Show visualisations
     updatePies();
     drawHistogram(data.aggregates.games_per_year);
+    listGames(data.hits.games);
 
     // Load data  and geodata from file
     Promise.all([
@@ -72,6 +73,7 @@ function selectCanton(cantonSlug) {
     updateDataViz()
 }
 
+// Once new currentParams have ben set, fetch the new data and refresh the visualizations
 function updateDataViz() {
     // Get data based on the currently selected query parameters
     getCachedData(currentParams).then((data) => {
@@ -81,6 +83,7 @@ function updateDataViz() {
         updatePies();
         updateHistogram(data.aggregates.games_per_year);
         drawMap(data.aggregates.games_per_canton, cantons, lakes);
+        listGames(data.hits.games);
     });
 }
 

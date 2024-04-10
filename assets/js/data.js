@@ -111,13 +111,10 @@ async function getData(options = null) {
 }
 
 function extractHits(json) {
-    //console.log(json);
     const hits = {
         "total": json.hits.total.value,
         "games": []
     };
-
-    console.log(json)
 
     for (let hit of json.hits.hits) {
         const game = hit._source;
