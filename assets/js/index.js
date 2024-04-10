@@ -21,8 +21,8 @@ const buttons = document.getElementById("buttons");
 
 window.onresize = () => {
     // Responsive histogram on resize
-    updateHistogram(currentData.games_per_year);
-    updateMap(currentData.games_per_canton);
+    updateHistogram(currentData.aggegates.games_per_year);
+    updateMap(currentData.aggregates.games_per_canton);
     updatePies();
 }
 
@@ -32,7 +32,7 @@ getCachedData(currentParams).then((data) => {
     currentData = data;
 
     // Set min and max years based on min and max in the global data
-    [firstYear, lastYear] = d3.extent(Object.keys(data.games_per_year).map(key => parseInt(key)));
+    [firstYear, lastYear] = d3.extent(Object.keys(data.aggregates.games_per_year).map(key => parseInt(key)));
     currentParams.release_year_start = firstYear;
     currentParams.release_year_end = lastYear;
     sliderStart.value = firstYear;
@@ -46,7 +46,7 @@ getCachedData(currentParams).then((data) => {
 
     // Show visualisations
     updatePies();
-    drawHistogram(data.games_per_year);
+    drawHistogram(data.aggregates.games_per_year);
 
     // Load data  and geodata from file
     Promise.all([
@@ -57,7 +57,7 @@ getCachedData(currentParams).then((data) => {
         cantons = cantonsData;
         lakes = lakesData;
         // Draw map
-        drawMap(data.games_per_canton, cantons, lakes);
+        drawMap(data.aggregates.games_per_canton, cantons, lakes);
     });
 });
 
@@ -79,8 +79,8 @@ function updateDataViz() {
 
         // Update visualizations with new data
         updatePies();
-        updateHistogram(data.games_per_year);
-        drawMap(data.games_per_canton, cantons, lakes);
+        updateHistogram(data.aggregates.games_per_year);
+        drawMap(data.aggregates.games_per_canton, cantons, lakes);
     });
 }
 

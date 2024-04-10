@@ -72,10 +72,10 @@ function updatePies() {
         .innerRadius(radius - donutWidth)
         .outerRadius(radius);
 
-    bakePie("pie-genres", currentData.games_per_genre);
-    bakePie("pie-stores", currentData.games_per_store);
-    bakePie("pie-platforms", currentData.games_per_platform);
-    bakePie("pie-states", currentData.games_per_state);
+    bakePie("pie-genres", currentData.aggregates.games_per_genre);
+    bakePie("pie-stores", currentData.aggregates.games_per_store);
+    bakePie("pie-platforms", currentData.aggregates.games_per_platform);
+    bakePie("pie-states", currentData.aggregates.games_per_state);
 }
 
 function bakePie(id, data) {

@@ -85,8 +85,7 @@ function id2canton(cantonId) {
 /// If we want the data for a specific canton, call the function with the
 /// slug of the canton
 /// TODO: get full names of key values
-async function getAggregateData(options = null) {
-    let aggregate = {};
+async function getData(options = null) {
 
     const url = buildQueryUrl(options)
 
@@ -103,6 +102,34 @@ async function getAggregateData(options = null) {
     json = await fetch(url)
         .then((response) => response.json())
         .catch((error) => console.log(error));
+
+    const aggregates = extractAggregates(json, slugs);
+
+    const hits = extractHits(json);
+    
+    return {aggregates, hits};
+}
+
+function extractHits(json) {
+    //console.log(json);
+    const hits = {
+        "total": json.hits.total.value,
+        "games": []
+    };
+
+    console.log(json)
+
+    for (let hit of json.hits.hits) {
+        const game = hit._source;
+
+        hits.games.push(game);
+    }
+
+    return hits;
+}
+
+function extractAggregates(json, slugs) {
+    let aggregate = {};
 
     // Grab common aggregate data object
     const rawAggregates = json["aggregations"]["aggs_all"];
@@ -253,7 +280,7 @@ async function getCachedData(options = null) {
 
     if (cachedData === null || NO_CACHE) {
         // Get new data from the API
-        const data = await getAggregateData(options);
+        const data = await getData(options);
         sessionStorage.setItem(queryUrl, JSON.stringify(data));
         return data;
     } else {
