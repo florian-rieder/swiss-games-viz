@@ -136,6 +136,16 @@ ul#games-list li {
   margin-bottom: 1rem;
   display: flex;
   flex-direction: row;
+  width: 100%;
+}
+ul#games-list li h3 {
+  margin: 0;
+  font-weight: 300;
+  font-size: 1rem;
+}
+ul#games-list li h3 a {
+  text-decoration: none;
+  color: gray;
 }
 ul#games-list li h2 {
   margin: 0;
@@ -145,12 +155,11 @@ ul#games-list li .game-content {
   padding: 1rem;
 }
 ul#games-list li .game-cover {
-  width: 150px;
-  height: 150px;
+  flex-grow: 0;
 }
 ul#games-list li .game-cover img {
-  width: 150px;
-  height: 150px;
+  width: 250px;
+  height: 250px;
   object-fit: cover;
 }
 
