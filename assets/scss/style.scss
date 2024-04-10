@@ -1,5 +1,7 @@
 @import "slider";
 @import "footer";
+@import "map";
+@import "pies";
 
 
 body {
@@ -51,65 +53,6 @@ button:hover {
 
 .main-container {
     width: 100%;
-
-    #map-container {
-        height: calc(100vh * (3 / 5));
-        display: flex;
-        flex-direction: column;
-
-        #map-wrapper {
-            display: flex;
-            flex-grow: 1;
-            overflow: hidden; // Prevents svg from expanding the div's size
-            justify-content: center;
-
-            // Center map horizontally
-            #map {
-                display: inline-block;
-                margin: auto;
-            }
-        }
-    }
-
-    #bottom-container {
-        height: calc(100vh * (2 / 5));
-        display: flex;
-        flex-direction: column;
-
-        .pies-container {
-            width: 100%;
-            display: flex;
-            flex-grow: 1;
-            flex-direction: row;
-            justify-content: space-around;
-            gap: 10px;
-
-            .pie-container {
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
-
-                height: 100%;
-                overflow: hidden;
-
-                h3 {
-                    margin: 0;
-                }
-    
-                .pie-wrapper {
-                    display: flex;
-                    flex-grow: 1;
-                    flex-shrink: 0;
-
-                    .pie-wrapped {
-                        flex-grow: 1;
-                        flex-shrink: 0;
-                        flex-basis: 0;
-                    }
-                }
-            }
-        }
-    }
 
     .chart-container {
         position: relative;

@@ -143,19 +143,45 @@ function onPieMouseOver(event, d) {
 
     // Dirty, but it works
     const pieId = event.target.parentElement.parentElement.parentElement.id;
-    const pieTooltip = d3.select(`#${pieId} .data-tooltip`)
+    const pieTooltip = d3.select(`#${pieId} .data-tooltip`);
 
     // Make tooltip appear on hover
     pieTooltip.transition()
         .duration(50)
         .style("opacity", 1);
 
-    const centroid = arc.centroid(d);
+    // Fill tooltip data
+    pieTooltip.html(d.data.key_name + " " + d.data.value);
 
-    // Update tooltip and move it to the centroid
-    pieTooltip.html(d.data.key_name + " " + d.data.value)
-        .style("left", (centroid[0] + pieWidth / 2) + "px")
-        .style("top", (centroid[1] + pieHeight / 2) + "px");
+    // Tooltip placement
+    const centroid = arc.centroid(d);
+    const tooltipWidth = document.querySelector(`#${pieId} .data-tooltip`).offsetWidth;
+    const tooltipHeight = document.querySelector(`#${pieId} .data-tooltip`).offsetHeight;
+
+    // Set position of the tooltip around the center of the hovered arc
+    let left = centroid[0] + pieWidth / 2 - tooltipWidth / 2;
+    let top = centroid[1] + pieHeight / 2 - tooltipHeight / 2;
+
+    // Prevent tooltip from overflowing
+    // Overflows on the left
+    if (left < 0) {
+        left = 0;
+    }
+    // Overflows on the right
+    else if (left + tooltipWidth > pieWidth) {
+        left = pieWidth - tooltipWidth;
+    }
+    // Overflows at the top
+    if (top < 0) {
+        top = 0;
+    // Overflows at the bottom
+    } else if (top + tooltipHeight > pieHeight) {
+        top = pieHeight - tooltipHeight;
+    }
+
+    // Update tooltip and move it to the new position
+    pieTooltip.style("left", left + "px")
+        .style("top", top + "px");
 }
 
 function onPieMouseOut(event, d) {
