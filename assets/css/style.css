@@ -222,7 +222,7 @@ button:hover {
   border: 1px solid #313639;
   border-radius: 8px;
   pointer-events: none;
-  font-size: 1.3rem;
+  font-size: 1rem;
   z-index: 999;
 }
 .main-container #histogram-with-slider {

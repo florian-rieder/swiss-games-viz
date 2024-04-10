@@ -154,9 +154,28 @@ function onBarMouseOver(e, d) {
         .duration(50)
         .style("opacity", 1);
 
-    histogramTooltip.html(d[0] + " " + d[1])
-        .style("left", this.x.baseVal.value + this.width.baseVal.value / 2 - histogramTooltip.node().offsetWidth / 2 + "px")
-        .style("top", e.target.parentElement.height.baseVal.value / 2 - histogramTooltip.node().offsetHeight / 2 + "px");
+    histogramTooltip.html(d[0] + " <strong>" + d[1] + "</strong>")
+
+    const tooltipWidth = histogramTooltip.node().offsetWidth;
+    const tooltipHeight = histogramTooltip.node().offsetHeight;
+    const histogramWidth = document.querySelector("#histogram").offsetWidth;
+
+    // Set position of the tooltip around the center of the hovered bar
+    let left = this.x.baseVal.value + this.width.baseVal.value / 2 - tooltipWidth / 2;
+    let top = e.target.parentElement.height.baseVal.value / 2 - tooltipHeight / 2;
+
+    // Prevent tooltip from overflowing
+    // Overflows on the left
+    if (left < 0) {
+        left = 0;
+    }
+    // Overflows on the right
+    else if (left + tooltipWidth > histogramWidth) {
+        left = histogramWidth - tooltipWidth;
+    }
+
+    histogramTooltip.style("left", left + "px")
+        .style("top", top + "px");
 }
 
 function onBarMouseOut(e, d) {

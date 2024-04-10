@@ -157,7 +157,7 @@ function onCantonMouseOver(event, d) {
     const centroid = path.centroid(d);
 
     // Update tooltip and move it to the centroid of the canton
-    tooltip.html(d.properties.name + " " + numGames)
+    tooltip.html(d.properties.name + " <strong>" + numGames + "</strong>")
         .style("left", (centroid[0] - tooltip.node().offsetWidth / 2) + "px")
         .style("top", (centroid[1] - tooltip.node().offsetHeight / 2) + "px");
 }

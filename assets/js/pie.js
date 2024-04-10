@@ -151,12 +151,12 @@ function onPieMouseOver(event, d) {
         .style("opacity", 1);
 
     // Fill tooltip data
-    pieTooltip.html(d.data.key_name + " " + d.data.value);
+    pieTooltip.html(d.data.key_name + " <strong>" + d.data.value + "</strong>");
 
     // Tooltip placement
     const centroid = arc.centroid(d);
-    const tooltipWidth = document.querySelector(`#${pieId} .data-tooltip`).offsetWidth;
-    const tooltipHeight = document.querySelector(`#${pieId} .data-tooltip`).offsetHeight;
+    const tooltipWidth = pieTooltip.node().offsetWidth;
+    const tooltipHeight = pieTooltip.node().offsetHeight;
 
     // Set position of the tooltip around the center of the hovered arc
     let left = centroid[0] + pieWidth / 2 - tooltipWidth / 2;
