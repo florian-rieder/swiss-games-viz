@@ -35,6 +35,8 @@ getCachedData(currentParams).then((data) => {
     [firstYear, lastYear] = d3.extent(Object.keys(data.aggregates.games_per_year).map(key => parseInt(key)));
     currentParams.release_year_start = firstYear;
     currentParams.release_year_end = lastYear;
+
+    // Initialize the release years slider
     sliderStart.value = firstYear;
     sliderStart.min = firstYear;
     sliderStart.max = lastYear;

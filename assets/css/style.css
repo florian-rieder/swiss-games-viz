@@ -126,6 +126,10 @@ footer a:hover {
   margin: auto;
 }
 
+#games-list-container {
+  margin-top: 1em;
+}
+
 ul#games-list {
   list-style: none;
   padding: 0;
@@ -172,6 +176,7 @@ ul#games-list li .game-cover img {
   width: 100%;
   display: flex;
   flex-grow: 1;
+  overflow: hidden;
   flex-direction: row;
   justify-content: space-around;
   gap: 10px;
@@ -189,7 +194,7 @@ ul#games-list li .game-cover img {
 #bottom-container .pies-container .pie-container .pie-wrapper {
   display: flex;
   flex-grow: 1;
-  flex-shrink: 0;
+  overflow: hidden;
 }
 #bottom-container .pies-container .pie-container .pie-wrapper .pie-wrapped {
   flex-grow: 1;

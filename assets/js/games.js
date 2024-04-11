@@ -10,7 +10,7 @@ function listGames(data) {
     listItems.enter()
         .append("li")
         .html(d => {
-            console.log(d)
+            //console.log(d)
 
             let excerpt = "No description";
             if (d.desc != null) {
