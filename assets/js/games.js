@@ -2,43 +2,46 @@ const EXCERPT_MAX_LENGTH = 150;
 
 function listGames(data) {
     // Select the existing <li> elements
-    const listItems = d3.select("ul#games-list")
+    const listItems = d3.select("#games-list")
         .selectAll('li')
         .data(data, d => d.id);
 
     // Append new elements
     listItems.enter()
-        .append("li")
+        .append("div")
+        .attr("class", "game-card pure-u-1 pure-u-md-1-3 pure-u-lg-1-5")
         .html(d => {
             //console.log(d)
 
-            let excerpt = "No description";
-            if (d.desc != null) {
-                if (d.desc.length > EXCERPT_MAX_LENGTH) {
-                    excerpt = d.desc.substring(0, EXCERPT_MAX_LENGTH);
-                    excerpt = excerpt.substring(0, excerpt.lastIndexOf(' '));
-                    excerpt += '...';
-                } else {
-                    excerpt = d.desc;
-                }
-            }
+            // let excerpt = "No description";
+            // if (d.desc != null) {
+            //     if (d.desc.length > EXCERPT_MAX_LENGTH) {
+            //         excerpt = d.desc.substring(0, EXCERPT_MAX_LENGTH);
+            //         excerpt = excerpt.substring(0, excerpt.lastIndexOf(' '));
+            //         excerpt += '...';
+            //     } else {
+            //         excerpt = d.desc;
+            //     }
+            // }
 
             // Cover image
             let cover = "";
             if (d.medias.length > 0) {
-                cover = `<img src="${d.medias[0].href}">`
+                cover = `<img src="${d.medias[0].href}">`;
+            } else {
+                cover = '<img src="/assets/images/cover-placeholder.svg">';
             }
 
             let credits = [];
             // If there are no studios listed
             if (d.studios == undefined || d.studios.length == 0) {
-                for (let p of d.people) {
-                    let person = `<a href="https://swissgames.garden${p.path}" target="_blank">${p.fullname}</a>`
+                for (const p of d.people) {
+                    const person = p.fullname;
                     credits.push(person);
                 }
             } else {
-                for (let s of d.studios) {
-                    let studio = `<a href="https://swissgames.garden${s.path}" target="_blank">${s.name}</a>`
+                for (const s of d.studios) {
+                    const studio = s.name;
                     credits.push(studio);
                 }
             }
@@ -48,18 +51,22 @@ function listGames(data) {
 
 
             return `
-            <div class="game-content">
-                <h3>${credits}</h3>
-                <h2>${d.title}</h2>
-                <p>${d.releases_years[0].year}</p>
-                <p>${excerpt}</p>
-                <a href="https://swissgames.garden${d.path}" target="_blank"><button class="game-link">More</button></a>
-            </div>
             <div class="game-cover">
                 <a href="https://swissgames.garden${d.path}" target="_blank">
                 ${cover}
                 </a>
             </div>
+            <div class="game-content">
+                <span class="game-credits truncate">${credits}</span>
+                <h2 class="game-title">${d.title}</h2>
+                <span class="game-release-year">${d.releases_years[0].year}</span>
+                <div>
+                    <a href="https://swissgames.garden${d.path}" target="_blank">
+                        <button class="game-link">More</button>
+                    </a>
+                </div>
+            </div>
+            
             `
         })
         .style("opacity", 0)

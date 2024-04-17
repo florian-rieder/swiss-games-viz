@@ -127,44 +127,47 @@ footer a:hover {
 }
 
 #games-list-container {
-  margin-top: 1em;
+  margin-top: 3em;
+  padding-left: 2em;
+  padding-right: 2em;
 }
 
-ul#games-list {
+#games-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-ul#games-list li {
+#games-list .game-card {
+  margin: 0.5rem;
   border: 1px solid white;
   margin-bottom: 1rem;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+}
+#games-list .game-card .game-cover {
   width: 100%;
 }
-ul#games-list li h3 {
+#games-list .game-card .game-cover img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+#games-list .game-card .game-content {
+  padding: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+}
+#games-list .game-card .game-content span.game-credits {
   margin: 0;
   font-weight: 300;
   font-size: 1rem;
-}
-ul#games-list li h3 a {
-  text-decoration: none;
   color: gray;
 }
-ul#games-list li h2 {
+#games-list .game-card .game-content h2.game-title {
   margin: 0;
-}
-ul#games-list li .game-content {
-  flex-grow: 1;
-  padding: 1rem;
-}
-ul#games-list li .game-cover {
-  flex-grow: 0;
-}
-ul#games-list li .game-cover img {
-  width: 250px;
-  height: 250px;
-  object-fit: cover;
 }
 
 #bottom-container {
@@ -272,4 +275,16 @@ button:hover {
 .main-container #histogram-with-slider {
   position: relative;
   margin-bottom: 100px;
+}
+
+.badge {
+  border: 1px solid gray;
+  border-radius: 5px;
+  color: white;
+}
+
+.truncate {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }/*# sourceMappingURL=style.css.map */

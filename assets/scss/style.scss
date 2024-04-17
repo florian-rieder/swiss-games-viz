@@ -80,3 +80,16 @@ button:hover {
         margin-bottom: 100px;
     }
 }
+
+.badge {
+    border: 1px solid gray;
+    border-radius: 5px;
+    color: white;
+
+}
+
+.truncate {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
