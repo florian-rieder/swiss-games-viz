@@ -137,12 +137,17 @@ footer a:hover {
   padding: 0;
   margin: 0;
 }
+#games-list a {
+  text-decoration: none;
+  cursor: pointer;
+}
 #games-list .game-card {
   margin: 0.5rem;
   background-color: rgb(40, 40, 40);
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
+  transition-duration: 200ms;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -159,14 +164,29 @@ footer a:hover {
   box-sizing: border-box;
   width: 100%;
 }
-#games-list .game-card .game-content span.game-credits {
-  margin: 0;
+#games-list .game-card .game-content div.game-meta {
+  display: flex;
+  justify-content: space-between;
+  color: rgb(161, 161, 161);
   font-weight: 300;
   font-size: 1rem;
-  color: gray;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
 }
-#games-list .game-card .game-content h2.game-title {
-  margin: 0;
+#games-list .game-card .game-content div.game-meta span.game-credits {
+  flex-grow: 1;
+}
+#games-list .game-card .game-content div.game-meta span.game-release-year {
+  flex-grow: 0;
+}
+#games-list .game-card .game-content .game-title {
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  color: white;
+}
+#games-list .game-card:hover {
+  background-color: rgb(60, 60, 60);
 }
 
 #load-more-games {

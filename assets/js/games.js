@@ -41,23 +41,20 @@ function listGames(data) {
             credits = credits.join(", ");
 
             return `
+            <a href="https://swissgames.garden${d.path}" target="_blank">
             <div class="game-cover">
-                <a href="https://swissgames.garden${d.path}" target="_blank">
                 ${cover}
-                </a>
             </div>
             <div class="game-content">
                 <div class="game-meta">
                     <span class="game-credits truncate">${credits}</span>
                     <span class="game-release-year">${d.releases_years[0].year}</span>
-                </div
-                <h2 class="game-title">${d.title}</h2>
-                <div>
-                    <a href="https://swissgames.garden${d.path}" target="_blank">
-                        <button class="game-link">More ${d.id}</button>
-                    </a>
                 </div>
-            </div>`
+                <div class="game-title">${d.title}</div>
+                <div>
+                </div>
+            </div>
+            </a>`
         })
         .style("opacity", 0);
 

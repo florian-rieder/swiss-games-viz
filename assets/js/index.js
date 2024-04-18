@@ -76,6 +76,7 @@ function selectCanton(cantonSlug) {
     updateData().then(updateViz);
 }
 
+// Refresh currentData based on currentParams
 async function updateData() {
     // Reset to the start of the list (in case other parameters changed which change how many games are returned)
     currentParams.page = 0;
@@ -86,9 +87,6 @@ async function updateData() {
 
 // Once new currentParams have ben set, fetch the new data and refresh the visualizations
 function updateViz() {
-    console.log(currentParams);
-    console.log(currentData.hits);
-
     // Disable the load more games button if we already have loaded all available games
     if (currentData.hits.total == currentData.hits.games.length) {
         loadMoreGamesBtn.classList.add("hidden");
