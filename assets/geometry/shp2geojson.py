@@ -11,21 +11,21 @@ import geopandas as gpd
 
 
 # Read the shapefile
-gdf = gpd.read_file('cantons/K4kant20220101gf_ch2007Poly.shp')
+cantons = gpd.read_file('cantons/K4kant20220101gf_ch2007Poly.shp')
 lakes = gpd.read_file('hydro/k4seenyyyymmdd11_ch2007Poly.shp')
 
 # Simplify the geometry
 tolerance = 300
-gdf['geometry'] = gdf['geometry'].simplify(tolerance)
+cantons['geometry'] = cantons['geometry'].simplify(tolerance)
 lakes['geometry'] = lakes['geometry'].simplify(tolerance)
 
 # Reproject to WGS84 (EPSG:4326)
-gdf_wgs84 = gdf.to_crs("EPSG:4326")
+cantons_wgs84 = cantons.to_crs("EPSG:4326")
 lakes_wgs84 = lakes.to_crs("EPSG:4326")
 
 
 # Merge Appenzell Innerrhoden and Appenzell Ausserrhoden
-regions_to_merge = gdf_wgs84[gdf_wgs84['id'].isin([15, 16])]
+regions_to_merge = cantons_wgs84[cantons_wgs84['id'].isin([15, 16])]
 
 # Combine the geometries of the selected regions into a single geometry
 merged_geometry = regions_to_merge.unary_union
@@ -38,12 +38,12 @@ merged_region['name'] = 'Appenzell'
 merged_region['id'] = 15
 
 # Drop the original regions from the GeoDataFrame
-gdf_wgs84 = gdf_wgs84.drop(gdf_wgs84[gdf_wgs84['id'].isin([15, 16])].index)
+cantons_wgs84 = cantons_wgs84.drop(cantons_wgs84[cantons_wgs84['id'].isin([15, 16])].index)
 
 # Append the merged region to the GeoDataFrame
-gdf_wgs84 = pd.concat([gdf_wgs84, merged_region])
+cantons_wgs84 = pd.concat([cantons_wgs84, merged_region])
 
 
 # Save as GeoJSON
-gdf_wgs84.to_file('cantons.geojson', driver='GeoJSON')
+cantons_wgs84.to_file('cantons.geojson', driver='GeoJSON')
 lakes_wgs84.to_file('lakes.geojson', driver='GeoJSON')
