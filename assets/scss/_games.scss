@@ -66,6 +66,7 @@
             box-sizing: border-box;
             width: 100%;
             height: 200px;
+            position: relative;
 
             div.game-meta {
                 display: flex;
@@ -87,18 +88,20 @@
             }
 
             .game-title {
+                display: inline;
                 font-size: 1.25rem;
                 font-weight: 400;
                 margin-bottom: 1rem;
                 color: white;
             }
 
-            .game-platforms {
-                line-height: 2rem;
-            }
+            .game-badges {
+                position: absolute;
+                bottom: 1rem;
 
-            .game-genres {
-                line-height: 2rem;
+                .game-platforms, .game-genres {
+                    line-height: 1.75rem;
+                }
             }
         }
     }

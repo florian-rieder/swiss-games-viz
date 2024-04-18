@@ -46,7 +46,7 @@ function listGames(data) {
                 platforms.push(platformBadge)
             }
 
-            platforms = platforms.join(' ');
+            platforms = platforms.join('');
 
             // Genres
             let genres = []
@@ -58,13 +58,13 @@ function listGames(data) {
                     genres.push(genreBadge);
                 }
     
-                genres = genres.join(' ');
+                genres = genres.join('');
             }
             
 
-            if (d.releases.length > 1) {
-                additionalPlatforms = `+${d.releases.length - 1}`
-            }
+            // if (d.releases.length > 1) {
+            //     additionalPlatforms = `+${d.releases.length - 1}`
+            // }
 
             return `
             <a href="https://swissgames.garden${d.path}" target="_blank">
@@ -77,8 +77,10 @@ function listGames(data) {
                     <span class="game-release-year">${d.releases_years[0].year}</span>
                 </div>
                 <div class="game-title">${d.title}</div>
-                <div class="game-platforms">${platforms}</div>
-                <div class="game-genres">${genres}</div>
+                <div class="game-badges">
+                    <div class="game-platforms">${platforms}</div>
+                    <div class="game-genres">${genres}</div>
+                </div>
             </div>
             </a>`
         })

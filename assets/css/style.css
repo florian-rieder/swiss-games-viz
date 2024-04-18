@@ -181,6 +181,7 @@ footer a:hover {
   box-sizing: border-box;
   width: 100%;
   height: 200px;
+  position: relative;
 }
 #games-list .game-card .game-content div.game-meta {
   display: flex;
@@ -198,16 +199,18 @@ footer a:hover {
   flex-grow: 0;
 }
 #games-list .game-card .game-content .game-title {
+  display: inline;
   font-size: 1.25rem;
   font-weight: 400;
   margin-bottom: 1rem;
   color: white;
 }
-#games-list .game-card .game-content .game-platforms {
-  line-height: 2rem;
+#games-list .game-card .game-content .game-badges {
+  position: absolute;
+  bottom: 1rem;
 }
-#games-list .game-card .game-content .game-genres {
-  line-height: 2rem;
+#games-list .game-card .game-content .game-badges .game-platforms, #games-list .game-card .game-content .game-badges .game-genres {
+  line-height: 1.75rem;
 }
 #games-list .game-card:hover {
   background-color: rgb(60, 60, 60);
@@ -332,7 +335,8 @@ button:hover {
   color: gray;
   padding: 0.2rem;
   font-weight: 300;
-  margin-right: 0.25rem;
+  white-space: nowrap;
+  margin-right: 1px;
 }
 
 .truncate {

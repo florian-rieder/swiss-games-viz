@@ -87,7 +87,9 @@ button:hover {
     color: gray;
     padding: 0.2rem;
     font-weight: 300;
-    margin-right: 0.25rem;
+    white-space: nowrap;
+    margin-right: 1px;
+
 }
 
 .truncate {
