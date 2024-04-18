@@ -4,6 +4,29 @@
     padding-right: 2em;
 }
 
+.pure-g {
+    @media screen and (min-width: 64em) {
+        // Large screens: 5 cards per row
+        .game-card {
+            width: calc(20% - 1rem);
+        }
+    }
+
+    @media screen and (max-width: 64em) {
+        // Medium screens: 3 cards per row
+        .game-card {
+            width: calc(33.333% - 1rem);
+        }
+    }
+
+    @media screen and (max-width: 48em) {
+        // Small screens: 1 card per row
+        .game-card {
+            width: calc(100% - 1rem);
+        }
+    }
+}
+
 #games-list {
     list-style: none;
     padding: 0;
@@ -42,6 +65,7 @@
             padding: 1rem;
             box-sizing: border-box;
             width: 100%;
+            height: 200px;
 
             div.game-meta {
                 display: flex;
@@ -70,11 +94,11 @@
             }
 
             .game-platforms {
-                height: 2rem;
+                line-height: 2rem;
             }
 
             .game-genres {
-
+                line-height: 2rem;
             }
         }
     }

@@ -132,6 +132,22 @@ footer a:hover {
   padding-right: 2em;
 }
 
+@media screen and (min-width: 64em) {
+  .pure-g .game-card {
+    width: calc(20% - 1rem);
+  }
+}
+@media screen and (max-width: 64em) {
+  .pure-g .game-card {
+    width: calc(33.333% - 1rem);
+  }
+}
+@media screen and (max-width: 48em) {
+  .pure-g .game-card {
+    width: calc(100% - 1rem);
+  }
+}
+
 #games-list {
   list-style: none;
   padding: 0;
@@ -164,6 +180,7 @@ footer a:hover {
   padding: 1rem;
   box-sizing: border-box;
   width: 100%;
+  height: 200px;
 }
 #games-list .game-card .game-content div.game-meta {
   display: flex;
@@ -187,7 +204,10 @@ footer a:hover {
   color: white;
 }
 #games-list .game-card .game-content .game-platforms {
-  height: 2rem;
+  line-height: 2rem;
+}
+#games-list .game-card .game-content .game-genres {
+  line-height: 2rem;
 }
 #games-list .game-card:hover {
   background-color: rgb(60, 60, 60);
