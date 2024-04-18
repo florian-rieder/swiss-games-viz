@@ -11,7 +11,7 @@
 
     .game-card {
         margin: 0.5rem;
-        border: 1px solid white;
+        background-color: rgb(40, 40, 40);
         margin-bottom: 1rem;
         display: flex;
         flex-direction: column;
@@ -19,7 +19,7 @@
         box-sizing: border-box;
         //flex-basis: calc(20% - 1rem);
         //height: 500px;
-        width: 100%;
+        //width: 100%;
         overflow: hidden;
 
         .game-cover {
@@ -49,4 +49,10 @@
             }
         }
     }
+}
+
+#load-more-games {
+    border: 1px solid gray;
+    background: transparent;
+    color: gray;
 }

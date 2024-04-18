@@ -139,12 +139,11 @@ footer a:hover {
 }
 #games-list .game-card {
   margin: 0.5rem;
-  border: 1px solid white;
+  background-color: rgb(40, 40, 40);
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  width: 100%;
   overflow: hidden;
 }
 #games-list .game-card .game-cover {
@@ -168,6 +167,12 @@ footer a:hover {
 }
 #games-list .game-card .game-content h2.game-title {
   margin: 0;
+}
+
+#load-more-games {
+  border: 1px solid gray;
+  background: transparent;
+  color: gray;
 }
 
 #bottom-container {

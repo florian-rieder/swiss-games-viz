@@ -18,6 +18,7 @@ let currentParams = {
 const submitBtn = document.getElementById("submit");
 const resetBtn = document.getElementById("reset");
 const buttons = document.getElementById("buttons");
+const loadMoreGamesBtn = document.getElementById("load-more-games");
 
 window.onresize = () => {
     // Responsive visualizations on resize
@@ -72,21 +73,34 @@ function selectCanton(cantonSlug) {
         return;
     }
 
-    updateDataViz()
+    updateData().then(updateViz);
+}
+
+async function updateData() {
+    // Reset to the start of the list (in case other parameters changed which change how many games are returned)
+    currentParams.page = 0;
+    // Refresh current data based on the currently selected query parameters
+    const data = await getCachedData(currentParams)
+    currentData = data;
 }
 
 // Once new currentParams have ben set, fetch the new data and refresh the visualizations
-function updateDataViz() {
-    // Get data based on the currently selected query parameters
-    getCachedData(currentParams).then((data) => {
-        currentData = data;
+function updateViz() {
+    console.log(currentParams);
+    console.log(currentData.hits);
 
-        // Update visualizations with new data
-        updatePies();
-        updateHistogram(data.aggregates.games_per_year);
-        drawMap(data.aggregates.games_per_canton, cantons, lakes);
-        listGames(data.hits.games);
-    });
+    // Disable the load more games button if we already have loaded all available games
+    if (currentData.hits.total == currentData.hits.games.length) {
+        loadMoreGamesBtn.classList.add("hidden");
+    } else {
+        loadMoreGamesBtn.classList.remove("hidden");
+    }
+
+    // Update visualizations with new data
+    updatePies();
+    updateHistogram(currentData.aggregates.games_per_year);
+    drawMap(currentData.aggregates.games_per_canton, cantons, lakes);
+    listGames(currentData.hits.games);
 }
 
 submitBtn.addEventListener("click", e => {
@@ -97,7 +111,7 @@ submitBtn.addEventListener("click", e => {
     resetBtn.classList.remove("hidden");
 
     // Refresh data with new query parameters
-    updateDataViz();
+    updateData().then(updateViz);
 });
 
 resetBtn.addEventListener("click", e => {
@@ -115,7 +129,7 @@ resetBtn.addEventListener("click", e => {
     }
 
     // refresh data with reset query parameters
-    updateDataViz();
+    updateData().then(updateViz);
 
     submitBtn.classList.add("hidden");
     resetBtn.classList.add("hidden");
@@ -131,3 +145,7 @@ function onInputsChanged() {
         resetBtn.classList.add("hidden");
     }
 }
+
+loadMoreGamesBtn.addEventListener("click", e => {
+    loadMoreGames().then(updateViz);
+});

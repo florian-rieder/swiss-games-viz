@@ -287,5 +287,15 @@ async function getCachedData(options = null) {
     }
 }
 
-//console.log(buildQueryUrl({ cantons: ["fribourg", "geneva"], genres: "platformer", release_year_start: "2004" }));
-//getAggregateData("fribourg").then(d => console.log(d))
+async function loadMoreGames() {
+    if (currentParams.page == null) {
+        currentParams.page = 1;
+    } else {
+        currentParams.page += 1;
+    }
+    
+    // Load the next page of games and append the list of games to the current list of games
+    data = await getCachedData(currentParams);
+
+    currentData.hits.games = currentData.hits.games.concat(data.hits.games);
+}

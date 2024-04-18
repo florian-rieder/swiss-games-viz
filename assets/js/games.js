@@ -1,28 +1,20 @@
 const EXCERPT_MAX_LENGTH = 150;
 
 function listGames(data) {
-    // Select the existing <li> elements
-    const listItems = d3.select("#games-list")
-        .selectAll('li')
+    const container = d3.select("#games-list");
+
+    // Select the existing elements
+    const updatingItems = container.selectAll('div.game-card')
         .data(data, d => d.id);
 
     // Append new elements
-    listItems.enter()
+    const enteringItems = container.selectAll('div.game-card')
+        .data(data, d => d.id)
+        .enter()
         .append("div")
         .attr("class", "game-card pure-u-1 pure-u-md-1-3 pure-u-lg-1-5")
         .html(d => {
             //console.log(d)
-
-            // let excerpt = "No description";
-            // if (d.desc != null) {
-            //     if (d.desc.length > EXCERPT_MAX_LENGTH) {
-            //         excerpt = d.desc.substring(0, EXCERPT_MAX_LENGTH);
-            //         excerpt = excerpt.substring(0, excerpt.lastIndexOf(' '));
-            //         excerpt += '...';
-            //     } else {
-            //         excerpt = d.desc;
-            //     }
-            // }
 
             // Cover image
             let cover = "";
@@ -47,8 +39,6 @@ function listGames(data) {
             }
 
             credits = credits.join(", ");
-            
-
 
             return `
             <div class="game-cover">
@@ -57,26 +47,30 @@ function listGames(data) {
                 </a>
             </div>
             <div class="game-content">
-                <span class="game-credits truncate">${credits}</span>
+                <div class="game-meta">
+                    <span class="game-credits truncate">${credits}</span>
+                    <span class="game-release-year">${d.releases_years[0].year}</span>
+                </div
                 <h2 class="game-title">${d.title}</h2>
-                <span class="game-release-year">${d.releases_years[0].year}</span>
                 <div>
                     <a href="https://swissgames.garden${d.path}" target="_blank">
-                        <button class="game-link">More</button>
+                        <button class="game-link">More ${d.id}</button>
                     </a>
                 </div>
-            </div>
-            
-            `
+            </div>`
         })
-        .style("opacity", 0)
-        .transition()
+        .style("opacity", 0);
+
+    enteringItems.transition()
         .duration(250)
         .style("opacity", 1);
 
     // Remove any extra elements
-    listItems.exit()
-        .transition()
+    const exitingItems = container.selectAll('div.game-card')
+        .data(data, d => d.id)
+        .exit();
+
+    exitingItems.transition()
         .duration(250)
         .style("opacity", 0)
         .remove();
