@@ -14,8 +14,6 @@ function listGames(data) {
         .append("div")
         .attr("class", "game-card pure-u-1 pure-u-md-1-3 pure-u-lg-1-5")
         .html(d => {
-            //console.log(d)
-
             // Cover image
             let cover = "";
             if (d.medias.length > 0) {
@@ -40,6 +38,34 @@ function listGames(data) {
 
             credits = credits.join(", ");
 
+            // Platform badges
+            let platforms = []
+
+            for (platform of d.releases) {
+                const platformBadge = `<span class="badge">${platform.platform_name}</span>`
+                platforms.push(platformBadge)
+            }
+
+            platforms = platforms.join(' ');
+
+            // Genres
+            let genres = []
+            if (d.genres == null) {
+                genres = "";
+            } else {
+                for (genre of d.genres) {
+                    const genreBadge = `<span class="badge">${genre.name}</span>`
+                    genres.push(genreBadge);
+                }
+    
+                genres = genres.join(' ');
+            }
+            
+
+            if (d.releases.length > 1) {
+                additionalPlatforms = `+${d.releases.length - 1}`
+            }
+
             return `
             <a href="https://swissgames.garden${d.path}" target="_blank">
             <div class="game-cover">
@@ -51,8 +77,8 @@ function listGames(data) {
                     <span class="game-release-year">${d.releases_years[0].year}</span>
                 </div>
                 <div class="game-title">${d.title}</div>
-                <div>
-                </div>
+                <div class="game-platforms">${platforms}</div>
+                <div class="game-genres">${genres}</div>
             </div>
             </a>`
         })

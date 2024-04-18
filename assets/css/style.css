@@ -140,6 +140,7 @@ footer a:hover {
 #games-list a {
   text-decoration: none;
   cursor: pointer;
+  color: grey;
 }
 #games-list .game-card {
   margin: 0.5rem;
@@ -184,6 +185,9 @@ footer a:hover {
   font-weight: 400;
   margin-bottom: 1rem;
   color: white;
+}
+#games-list .game-card .game-content .game-platforms {
+  height: 2rem;
 }
 #games-list .game-card:hover {
   background-color: rgb(60, 60, 60);
@@ -304,8 +308,11 @@ button:hover {
 
 .badge {
   border: 1px solid gray;
-  border-radius: 5px;
-  color: white;
+  border-radius: 2px;
+  color: gray;
+  padding: 0.2rem;
+  font-weight: 300;
+  margin-right: 0.25rem;
 }
 
 .truncate {

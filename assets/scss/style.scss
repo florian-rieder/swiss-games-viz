@@ -83,9 +83,11 @@ button:hover {
 
 .badge {
     border: 1px solid gray;
-    border-radius: 5px;
-    color: white;
-
+    border-radius: 2px;
+    color: gray;
+    padding: 0.2rem;
+    font-weight: 300;
+    margin-right: 0.25rem;
 }
 
 .truncate {
