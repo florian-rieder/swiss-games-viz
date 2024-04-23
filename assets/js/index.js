@@ -47,6 +47,9 @@ getCachedData(currentParams).then((data) => {
     slideOne();
     slideTwo();
 
+    document.getElementById("num-loaded-games").innerHTML = currentData.hits.games.length;
+    document.getElementById("num-total-games").innerHTML = currentData.hits.total;
+
     // Show visualisations
     updatePies();
     drawHistogram(data.aggregates.games_per_year);
@@ -93,6 +96,9 @@ function updateViz() {
     } else {
         loadMoreGamesBtn.classList.remove("hidden");
     }
+
+    document.getElementById("num-loaded-games").innerHTML = currentData.hits.games.length;
+    document.getElementById("num-total-games").innerHTML = currentData.hits.total;
 
     // Update visualizations with new data
     updatePies();
