@@ -158,6 +158,9 @@ footer a:hover {
   cursor: pointer;
   color: grey;
 }
+#games-list .game-card:hover {
+  background-color: rgb(60, 60, 60);
+}
 #games-list .game-card {
   margin: 0.5rem;
   background-color: rgb(40, 40, 40);
@@ -212,17 +215,32 @@ footer a:hover {
 #games-list .game-card .game-content .game-badges .game-platforms, #games-list .game-card .game-content .game-badges .game-genres {
   line-height: 1.75rem;
 }
-#games-list .game-card:hover {
-  background-color: rgb(60, 60, 60);
-}
 
-#load-more-games {
+#more-games-container {
+  display: flex;
+  flex-direction: column;
+  width: 130px;
+  gap: 1rem;
+}
+#more-games-container #more-games-count {
+  text-align: center;
+  margin-top: 3rem;
+  color: grey;
+  font-weight: 300;
+}
+#more-games-container #load-more-games {
   border: 1px solid rgb(40, 40, 40);
   background: transparent;
   color: white;
-  font-weight: 300;
-  font-size: 10pt;
+  font-weight: 400;
+  font-size: 11pt;
   text-transform: uppercase;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  transition: 200ms;
+}
+#more-games-container #load-more-games:hover {
+  border-color: rgb(100, 100, 100);
 }
 
 #bottom-container {
@@ -347,4 +365,9 @@ button:hover {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
 }/*# sourceMappingURL=style.css.map */
