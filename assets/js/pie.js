@@ -62,7 +62,7 @@ function updatePies() {
         d3.select(`#${id} svg`)
             .attr("width", pieWidth)
             .attr("height", pieHeight);
-        
+
         d3.select(`#${id} svg g`)
             .attr("transform", `translate(${pieWidth / 2}, ${pieHeight / 2})`);
 
@@ -87,12 +87,12 @@ function bakePie(id, data) {
     if (id in pieColors) {
         color = pieColors[id];
     } else {
-        colorRange = [...Array(Object.keys(data).length)].map((_, i) => `hsl(${i * (360 / Object.keys(data).length)}, 60%, 50%)`)    
-        
+        colorRange = [...Array(Object.keys(data).length)].map((_, i) => `hsl(${i * (360 / Object.keys(data).length)}, 60%, 50%)`)
+
         color = d3.scaleOrdinal()
             .domain(dataArray.sort(alphabeticalCompare).map(d => d.category))
             .range(colorRange);
-        
+
         pieColors[id] = color;
     }
 
@@ -113,6 +113,7 @@ function bakePie(id, data) {
         .append('path')
         .on("mouseover", onPieMouseOver)
         .on("mouseout", onPieMouseOut)
+        .on("click", onPieClick)
         // Set initial transition states
         .attr("opacity", 0)
         .attr("transform", initialTransform);
@@ -174,7 +175,7 @@ function onPieMouseOver(event, d) {
     // Overflows at the top
     if (top < 0) {
         top = 0;
-    // Overflows at the bottom
+        // Overflows at the bottom
     } else if (top + tooltipHeight > pieHeight) {
         top = pieHeight - tooltipHeight;
     }
@@ -185,16 +186,51 @@ function onPieMouseOver(event, d) {
 }
 
 function onPieMouseOut(event, d) {
-    d3.select(this).transition()
-        .duration(200)
-        .attr('opacity', 1);
 
     const pieId = event.target.parentElement.parentElement.parentElement.id;
+    const variable = pieId.slice(4);
+    const category = d.data.category;
+
+    // Define the opacity based on if this category is in the filters
+    d3.select(this).transition()
+        .duration(200)
+        .attr("opacity", currentParams[variable].indexOf(category) > -1 ? 0.6 : 1)
+
     const pieTooltip = d3.select(`#${pieId} .data-tooltip`);
 
     pieTooltip.transition()
         .duration(50)
         .style("opacity", 0);
+}
+
+function onPieClick(event, d) {
+    // get the slug of the variable from the id of the container.
+    // For example: "genres" or "platforms"
+    const variable = this.parentElement.parentElement.parentElement.id.slice(4);
+
+    const category = d.data.category
+
+    let opacity = 1;
+
+    const index = currentParams[variable].indexOf(category)
+    // Check if this category is already in the current parameters
+    if (index > -1) {
+        // Is contained in currentParams[variable]
+        opacity = 1;
+        // Remove the category from the filters
+        currentParams[variable].splice(index, 1);
+    } else {
+        // Is not contained
+        opacity = 0.6;
+        // Add the category to the filters
+        currentParams[variable].push(category);
+    }
+
+    d3.select(this).transition()
+            .duration(200)
+            .attr("opacity", opacity)
+
+    updateData().then(updateViz)
 }
 
 // Alphabetical compare function, used to sort keys alphabetically in the pies

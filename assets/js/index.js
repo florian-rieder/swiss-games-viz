@@ -5,10 +5,10 @@ let cantons, lakes;
 let currentParams = {
     page: null,
     cantons: null,
-    platforms: null,
-    stores: null,
-    genres: null,
-    states: null,
+    platforms: [],
+    stores: [],
+    genres: [],
+    states: [],
     locations: null,
     release_year_start: null,
     release_year_end: null
@@ -122,10 +122,10 @@ resetBtn.addEventListener("click", e => {
     currentParams = {
         page: null,
         cantons: null,
-        platforms: null,
-        stores: null,
-        genres: null,
-        states: null,
+        platforms: [],
+        stores: [],
+        genres: [],
+        states: [],
         locations: null,
         release_year_start: null,
         release_year_end: null
