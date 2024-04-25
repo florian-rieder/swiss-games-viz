@@ -69,12 +69,11 @@ getCachedData(currentParams).then((data) => {
 });
 
 function selectCanton(cantonSlug) {
-    if (cantonSlug != currentParams.cantons) {
-        currentParams.cantons = cantonSlug
-    } else {
-        // Prevent requesting the same data directly
-        return;
-    }
+    // Prevent requesting the same data directly
+    // FIXME: Fails when the current canton is ["bern", "biel"]
+    if (cantonSlug == currentParams.cantons) return;
+
+    currentParams.cantons = cantonSlug;
 
     updateData().then(updateViz);
 }
@@ -102,7 +101,7 @@ function updateViz() {
 
     // Update visualizations with new data
     updatePies();
-    updateHistogram(currentData.aggregates.games_per_year);
+    drawHistogram(currentData.aggregates.games_per_year);
     drawMap(currentData.aggregates.games_per_canton, cantons, lakes);
     listGames(currentData.hits.games);
 }
