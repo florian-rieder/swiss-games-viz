@@ -82,9 +82,21 @@ function selectCanton(cantonSlug) {
 async function updateData() {
     // Reset to the start of the list (in case other parameters changed which change how many games are returned)
     currentParams.page = 0;
+    let data;
     // Refresh current data based on the currently selected query parameters
-    const data = await getCachedData(currentParams)
-    currentData = data;
+    try {
+        data = await getCachedData(currentParams);
+        document.getElementById("error-message").classList.add("hidden");
+
+        currentData = data;
+    } catch (e) {
+        console.log('Error occurred', e);
+        document.getElementById("error-message").classList.remove("hidden");
+
+        // Reset games list
+        currentData.hits.total = 0;
+        currentData.hits.games = [];
+    }
 }
 
 // Once new currentParams have ben set, fetch the new data and refresh the visualizations
@@ -104,6 +116,7 @@ function updateViz() {
     drawHistogram(currentData.aggregates.games_per_year);
     drawMap(currentData.aggregates.games_per_canton, cantons, lakes);
     listGames(currentData.hits.games);
+    displayCategoryBadges();
 }
 
 submitBtn.addEventListener("click", e => {

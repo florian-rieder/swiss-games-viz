@@ -90,16 +90,22 @@
                     </div>
                 </div>
             </div>
+            <div id="category-badges"></div>
         </div>
     </div>
 
     <div id="games-list-container">
+        <div id="error-message" class="hidden">
+            <h2>Oops !</h2>
+            <p>Looks like there aren't any games matching your search.</p>
+        </div>
         <div id="games-list" class="pure-g">
             <!-- Populated by JS -->
         </div>
         <div class="flex-center">
             <div id="more-games-container">
-                <div id="more-games-count"><span id="num-loaded-games">?</span> of <span id="num-total-games">?</span></div>
+                <div id="more-games-count"><span id="num-loaded-games">?</span> of <span id="num-total-games">?</span>
+                </div>
                 <button id="load-more-games">Load more</button>
             </div>
         </div>

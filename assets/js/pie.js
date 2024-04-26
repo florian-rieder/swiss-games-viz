@@ -7,8 +7,13 @@ let radius = pieWidth / 2;
 // But other values also give interesting results.
 let sliceEnterDistance = radius;
 
-
 const pieIds = ["pie-genres", "pie-stores", "pie-platforms", "pie-states"];
+const categoryParams = {
+    "genres": [],
+    "platforms": [],
+    "stores": [],
+    "states": []
+}
 
 updatePiesSize();
 
@@ -72,15 +77,15 @@ function updatePies() {
         .innerRadius(radius - donutWidth)
         .outerRadius(radius);
 
-    bakePie("pie-genres", currentData.aggregates.games_per_genre);
-    bakePie("pie-stores", currentData.aggregates.games_per_store);
-    bakePie("pie-platforms", currentData.aggregates.games_per_platform);
-    bakePie("pie-states", currentData.aggregates.games_per_state);
+    bakePie("pie-genres", currentData.aggregates.games_per_genre, "genres");
+    bakePie("pie-stores", currentData.aggregates.games_per_store, "stores");
+    bakePie("pie-platforms", currentData.aggregates.games_per_platform, "platforms");
+    bakePie("pie-states", currentData.aggregates.games_per_state, "states");
 }
 
-function bakePie(id, data) {
+function bakePie(id, data, slug) {
     // Convert data to an array of objects
-    const dataArray = Object.entries(data).map(([category, data]) => ({ category, value: data.num_games, key_name: data.key_name }));
+    const dataArray = Object.entries(data).map(([category, data]) => ({ category, value: data.num_games, key_name: data.key_name, variable_name: slug }));
 
     let color;
     // We need to set the colors once and for all on the first call to this function.
@@ -104,7 +109,20 @@ function bakePie(id, data) {
 
     updatingArcs.transition().duration(500)
         .attr('d', arc)
-        .attr("transform", "translate(0,0) scale(1)");
+        .attr("transform", "translate(0,0) scale(1)")
+        .attr("opacity", d => {
+            const variable = d.data.variable_name;
+            const category = d.data.category;
+            let opacity;
+            if (categoryParams[variable].filter(x => x.data.category === category).length > 0) {
+                // Is contained in currentParams[variable]
+                opacity = 0.6;
+            } else {
+                // Is not contained
+                opacity = 1;
+            }
+            return opacity;
+        });
 
     // Handle entering arcs
     const enteringArcs = svg.selectAll("path")
@@ -206,31 +224,67 @@ function onPieMouseOut(event, d) {
 function onPieClick(event, d) {
     // get the slug of the variable from the id of the container.
     // For example: "genres" or "platforms"
-    const variable = this.parentElement.parentElement.parentElement.id.slice(4);
+    const variable = d.data.variable_name;
+    const category = d.data.category;
+    let opacity;
 
-    const category = d.data.category
-
-    let opacity = 1;
-
-    const index = currentParams[variable].indexOf(category)
     // Check if this category is already in the current parameters
-    if (index > -1) {
+    if (categoryParams[variable].filter(x => x.data.category === category).length > 0) {
         // Is contained in currentParams[variable]
         opacity = 1;
-        // Remove the category from the filters
-        currentParams[variable].splice(index, 1);
+        // Remove the category from the current parameters
+        categoryParams[variable] = categoryParams[variable].filter(x => x.data.category !== category);
+        currentParams[variable] = currentParams[variable].filter(x => x !== category);
     } else {
         // Is not contained
         opacity = 0.6;
-        // Add the category to the filters
-        currentParams[variable].push(category);
+        // Add the category to the current parameters
+        categoryParams[variable].push(d);
+        currentParams[variable].push(d.data.category);
     }
 
     d3.select(this).transition()
-            .duration(200)
-            .attr("opacity", opacity)
+        .duration(200)
+        .attr("opacity", opacity)
 
     updateData().then(updateViz)
+}
+
+function displayCategoryBadges() {
+    const data = [categoryParams.genres, categoryParams.platforms, categoryParams.stores, categoryParams.states].flat()
+
+    let container = d3.select('#category-badges');
+
+    let enteringBadges = container.selectAll('span')
+        .data(data, d => d.data.category)
+        .enter()
+        .append('span')
+        .attr('class', 'badge')
+        .html(d => d.data.key_name)
+        .style("cursor", "pointer")
+        .style("opacity", 0)
+        .on("click", badgeClick)
+
+    enteringBadges.transition()
+        .duration(200)
+        .style("opacity", 1)
+
+    let exitingBadges = container.selectAll('span')
+        .data(data, d => d.data.category)
+        .exit();
+
+    exitingBadges.transition()
+        .duration(200)
+        .style("opacity", 0)
+        .remove();
+}
+
+function badgeClick(event, d) {
+    console.log(d.data.category)
+    // Remove this category from filters
+    currentParams[d.data.variable_name] = currentParams[d.data.variable_name].filter(x => x !== d.data.category);
+    categoryParams[d.data.variable_name] = categoryParams[d.data.variable_name].filter(x => x.data.category !== d.data.category);
+    updateData().then(updateViz);
 }
 
 // Alphabetical compare function, used to sort keys alphabetically in the pies

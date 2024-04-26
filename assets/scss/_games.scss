@@ -6,6 +6,7 @@
 
 .pure-g {
     @media screen and (min-width: 64em) {
+
         // Large screens: 5 cards per row
         .game-card {
             width: calc(20% - 1rem);
@@ -13,6 +14,7 @@
     }
 
     @media screen and (max-width: 64em) {
+
         // Medium screens: 3 cards per row
         .game-card {
             width: calc(33.333% - 1rem);
@@ -20,6 +22,7 @@
     }
 
     @media screen and (max-width: 48em) {
+
         // Small screens: 1 card per row
         .game-card {
             width: calc(100% - 1rem);
@@ -37,9 +40,11 @@
         cursor: pointer;
         color: grey;
     }
+
     .game-card:hover {
         background-color: rgb(60, 60, 60);
     }
+
     .game-card {
         margin: 0.5rem;
         background-color: rgb(40, 40, 40);
@@ -52,7 +57,7 @@
         //height: 500px;
         //width: 100%;
         overflow: hidden;
-        
+
         .game-cover {
             width: 100%;
 
@@ -101,7 +106,8 @@
                 position: absolute;
                 bottom: 1rem;
 
-                .game-platforms, .game-genres {
+                .game-platforms,
+                .game-genres {
                     line-height: 1.75rem;
                 }
             }
@@ -114,7 +120,7 @@
     flex-direction: column;
     width: 130px;
     gap: 1rem;
-    
+
 
     #more-games-count {
         text-align: center;
@@ -138,5 +144,20 @@
 
     #load-more-games:hover {
         border-color: rgb(100, 100, 100);
+    }
+}
+
+#error-message {
+    border: 1px solid rgb(226, 58, 58);
+    border-radius: 5px;
+    color: rgb(226, 58, 58);
+    padding: 1rem;
+
+    h2 {
+        margin: 0;
+    }
+
+    p {
+        margin: 0;
     }
 }
