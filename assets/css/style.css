@@ -292,6 +292,36 @@ footer a:hover {
   flex-basis: 0;
 }
 
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  background-color: #333;
+  color: white;
+  border: 1px solid #333;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  background-color: #333;
+  min-width: 120px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #333;
+  padding: 8px;
+  z-index: 1;
+}
+
+.modal-content {
+  padding: 20px;
+  background-color: #fff;
+  color: #333;
+  text-align: center;
+}
+
 body {
   background-color: rgb(18, 18, 18);
   color: white;

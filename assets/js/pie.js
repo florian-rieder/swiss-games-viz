@@ -30,7 +30,8 @@ function updatePiesSize() {
         pieWidth = width;
         pieHeight = width;
     }
-    donutWidth = pieWidth * 0.25;
+
+    donutWidth = pieWidth / 4;
     radius = pieWidth / 2;
     sliceEnterDistance = radius;
 }
@@ -193,8 +194,9 @@ function onPieMouseOver(event, d) {
     // Overflows at the top
     if (top < 0) {
         top = 0;
-        // Overflows at the bottom
-    } else if (top + tooltipHeight > pieHeight) {
+    }
+    // Overflows at the bottom
+    else if (top + tooltipHeight > pieHeight) {
         top = pieHeight - tooltipHeight;
     }
 
@@ -300,7 +302,9 @@ function alphabeticalCompare(a, b) {
 }
 
 function initialTransform(d) {
+    // Angle that defines the center of a slice of the pie
     const middleAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+    // Slide the slice outwards
     const translateX = Math.sin(middleAngle) * sliceEnterDistance;
     const translateY = -Math.cos(middleAngle) * sliceEnterDistance;
 
