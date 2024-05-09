@@ -32,6 +32,8 @@ getCachedData(currentParams).then((data) => {
     globalData = data;
     currentData = data;
 
+    fillDropdowns(data);
+
     // Set min and max years based on min and max in the global data
     [firstYear, lastYear] = d3.extent(Object.keys(data.aggregates.games_per_year).map(key => parseInt(key)));
     currentParams.release_year_start = firstYear;
@@ -55,7 +57,7 @@ getCachedData(currentParams).then((data) => {
     drawHistogram(data.aggregates.games_per_year);
     listGames(data.hits.games);
 
-    // Load data  and geodata from file
+    // Load geodata from file
     Promise.all([
         d3.json('assets/geometry/cantons.geojson'),
         d3.json('assets/geometry/lakes.geojson')
@@ -112,6 +114,7 @@ function updateViz() {
     document.getElementById("num-total-games").innerHTML = currentData.hits.total;
 
     // Update visualizations with new data
+    updateDropdowns();
     updatePies();
     drawHistogram(currentData.aggregates.games_per_year);
     drawMap(currentData.aggregates.games_per_canton, cantons, lakes);

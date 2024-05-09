@@ -308,18 +308,20 @@ footer a:hover {
 .dropdown-menu {
   position: absolute;
   background-color: #333;
-  min-width: 120px;
+  min-width: 300px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid #333;
   padding: 8px;
   z-index: 1;
+  max-height: 500px;
+  right: 0;
 }
 
 .modal-content {
-  padding: 20px;
   background-color: #fff;
   color: #333;
-  text-align: center;
+  overflow-y: scroll;
+  max-height: inherit;
 }
 
 body {
@@ -392,7 +394,7 @@ button:hover {
 }
 .main-container #histogram-with-slider {
   position: relative;
-  margin-bottom: 100px;
+  margin-bottom: 3em;
 }
 
 .badge {
