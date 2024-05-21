@@ -24,8 +24,50 @@
 }
 
 .modal-content {
-    background-color: #fff;
     color: #333;
     overflow-y: scroll;
     max-height: inherit;
+}
+
+.dropdown-category-container {
+    padding: 0.5rem;
+
+    input[type="checkbox"] {
+        appearance: none;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+    }
+
+    /* On mouse-over, add a grey background color */
+    :hover input[type="checkbox"] {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    input[type="checkbox"]:checked {
+        background-color: #ff763b;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    input[type="checkbox"]:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+    
+    /* Show the checkmark when checked */
+    .container input:checked ~ input[type="checkbox"]:after {
+        display: block;
+    }
+
+    .dropdown-category-name {
+        color: white;
+        vertical-align: center;
+    }
+
+    .dropdown-category-num-games {
+        float: right;
+        color: grey;
+    }
 }

@@ -206,7 +206,6 @@ function onPieMouseOver(event, d) {
 }
 
 function onPieMouseOut(event, d) {
-
     const pieId = event.target.parentElement.parentElement.parentElement.id;
     const variable = pieId.slice(4);
     const category = d.data.category;
@@ -253,16 +252,31 @@ function onPieClick(event, d) {
 }
 
 function displayCategoryBadges() {
-    const data = [categoryParams.genres, categoryParams.platforms, categoryParams.stores, categoryParams.states].flat()
+    // This is pretty dirty honestly... But I can't see a better way for the moment to display all categorie's badges
+    // while also showing the pretty name, while also directly using the query params which must be lists of strings
+    // (categories slugs)
+    const variableNames = ["genres", "platforms", "stores", "states"];
+    const data = [];
+
+    variableNames.forEach(variableName => {
+        const items = currentParams[variableName];
+        items.forEach(item => {
+            data.push({
+                value: item,
+                key_name: globalData.aggregates[`games_per_${variableName.slice(0, -1)}`][item].key_name,
+                variable_name: variableName
+            });
+        });
+    });
 
     let container = d3.select('#category-badges');
 
     let enteringBadges = container.selectAll('span')
-        .data(data, d => d.data.category)
+        .data(data, d => d.value)
         .enter()
         .append('span')
         .attr('class', 'badge')
-        .html(d => d.data.key_name)
+        .html(d => d.key_name)
         .style("cursor", "pointer")
         .style("opacity", 0)
         .on("click", badgeClick)
@@ -272,7 +286,7 @@ function displayCategoryBadges() {
         .style("opacity", 1)
 
     let exitingBadges = container.selectAll('span')
-        .data(data, d => d.data.category)
+        .data(data, d => d.value)
         .exit();
 
     exitingBadges.transition()
@@ -282,10 +296,10 @@ function displayCategoryBadges() {
 }
 
 function badgeClick(event, d) {
-    console.log(d.data.category)
+    //console.log(d.data.category)
     // Remove this category from filters
-    currentParams[d.data.variable_name] = currentParams[d.data.variable_name].filter(x => x !== d.data.category);
-    categoryParams[d.data.variable_name] = categoryParams[d.data.variable_name].filter(x => x.data.category !== d.data.category);
+    currentParams[d.variable_name] = currentParams[d.variable_name].filter(x => x !== d.value);
+    //categoryParams[d.variable_name] = categoryParams[d.variable_name].filter(x => x.data.category !== d.value);
     updateData().then(updateViz);
 }
 

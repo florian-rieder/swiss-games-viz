@@ -17,15 +17,31 @@ function fillDropdowns(data) {
             .append('div')
             .attr('class', 'dropdown-category-container')
             .html(([key, value]) => `
-            <input type="checkbox" onclick="clickDropdownCheckbox('${variable}', '${key}')">
-            <span>${value.key_name}</span>
-            <span>${value.num_games}</span>
+            <input type="checkbox" data-category="${key}" onclick="clickDropdownCheckbox('${variable}', '${key}')">
+            <span class="dropdown-category-name">${value.key_name}</span>
+            <span class="dropdown-category-num-games">${value.num_games}</span>
             `)
       }
 }
 
 function updateDropdowns() {
-    // TODO
+    const slugs = ['cantons', 'stores', 'genres', 'platforms', 'states']
+
+    for (const slug of slugs) {
+
+        const checkboxes = document.querySelectorAll(`#${slug}Dropdown input[type="checkbox"]`);
+
+        for (const checkbox of checkboxes) {
+            const category = checkbox.getAttribute('data-category')
+            const isSelected = currentParams[slug].indexOf(category) > -1
+
+            if (isSelected) {
+                checkbox.setAttribute('checked', '');
+            } else {
+                checkbox.removeAttribute('checked');
+            }
+        }
+    }
 }
 
 function clickDropdownCheckbox(variable, key) {
@@ -35,7 +51,7 @@ function clickDropdownCheckbox(variable, key) {
         currentParams[variable] = currentParams[variable].filter(item => item !== key);
     } else {
         // If key is not in currentParams[variable], add it
-        if (!currentParams[variable]) {
+        if (! currentParams[variable]) {
             currentParams[variable] = []; // Initialize array if it doesn't exist
         }
         currentParams[variable].push(key);

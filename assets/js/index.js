@@ -4,7 +4,7 @@ let cantons, lakes;
 
 let currentParams = {
     page: null,
-    cantons: null,
+    cantons: [],
     platforms: [],
     stores: [],
     genres: [],
@@ -74,8 +74,11 @@ function selectCanton(cantonSlug) {
     // Prevent requesting the same data directly
     // FIXME: Fails when the current canton is ["bern", "biel"]
     if (cantonSlug == currentParams.cantons) return;
-
-    currentParams.cantons = cantonSlug;
+    if (cantonSlug == null) {
+        currentParams.cantons = []
+    } else {
+        currentParams.cantons = cantonSlug;
+    }
 
     updateData().then(updateViz);
 }
@@ -137,7 +140,7 @@ resetBtn.addEventListener("click", e => {
     // Reset parameters
     currentParams = {
         page: null,
-        cantons: null,
+        cantons: [],
         platforms: [],
         stores: [],
         genres: [],
