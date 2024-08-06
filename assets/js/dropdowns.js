@@ -28,9 +28,8 @@ function updateDropdowns() {
     const slugs = ['cantons', 'stores', 'genres', 'platforms', 'states']
 
     for (const slug of slugs) {
-
+        // For each dropdown, iterate through its checkboxes
         const checkboxes = document.querySelectorAll(`#${slug}Dropdown input[type="checkbox"]`);
-
         for (const checkbox of checkboxes) {
             const category = checkbox.getAttribute('data-category')
             const isSelected = currentParams[slug].indexOf(category) > -1
@@ -51,7 +50,7 @@ function clickDropdownCheckbox(variable, key) {
         currentParams[variable] = currentParams[variable].filter(item => item !== key);
     } else {
         // If key is not in currentParams[variable], add it
-        if (! currentParams[variable]) {
+        if (!currentParams[variable]) {
             currentParams[variable] = []; // Initialize array if it doesn't exist
         }
         currentParams[variable].push(key);

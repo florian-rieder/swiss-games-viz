@@ -58,17 +58,9 @@ function drawMap(data, cantons, lakes) {
         const slug = id2canton(cantonId)
         let numGames = 0
 
-        // This atrocity is all because Biel is classified as a canton,
-        // when it is part of the Bern canton !
-        if (Array.isArray(slug)) {
-            for (var s of slug) {
-                if (s in data) {
-                    numGames += data[s].num_games;
-                }
-            }
-        } else {
-            if (slug in data) {
-                numGames = data[slug].num_games;
+        for (var s of slug) {
+            if (s in data) {
+                numGames += data[s].num_games;
             }
         }
 
@@ -178,11 +170,28 @@ function onCantonClick(event, d) {
     // Don't do anything on greyed out cantons (cantons with no games)
     if (d.properties.num_games == 0) return;
 
-    // Set the title to the name of the canton
-    document.querySelector("#canton-selection-title").innerHTML = d.properties.name
+    const slugs = id2canton(d.properties.id);
+    const alreadySelected = slugs.filter(s => currentParams.cantons.includes(s));
 
-    // Select the canton and refresh viz
-    selectCanton(id2canton(d.properties.id));
+    // If this canton is already selected, remove it from the params
+    if (alreadySelected.length > 0) {
+
+        alreadySelected.forEach(slug => {
+            // Go back to global view: remove this slug from the current query parameters
+            currentParams.cantons = currentParams.cantons.filter(e => e !== slug);
+        })
+
+        if (currentParams.cantons.length == 0) {
+            selectCanton(null);
+        } else {
+            updateData().then(updateViz);
+        }
+    }
+    // Otherwise, add it
+    else {
+        // Select the canton and refresh viz
+        selectCanton(slugs);
+    }
 }
 
 // Function to handle click outside of map regions

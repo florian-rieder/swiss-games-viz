@@ -3,7 +3,7 @@ const API_ENDPOINT = "https://api.swissgames.garden/search/games";
 const NUM_HITS_PER_PAGE = 24;
 
 // Should we not cache data ? Used for debugging
-const NO_CACHE = false;
+const NO_CACHE = true;
 
 // Get pretty state name from key name
 const states = {
@@ -48,7 +48,7 @@ const canton2id = {
     "basel-stadt": 12,
     "basel-landschaft": 13,
     "schaffhausen": 14,
-    "appenzell": 15, // appenzell regroups innerrhoden and ausserrhoden, with id 15. id 16 is ignored.
+    "appenzell": 15, // Appenzell regroups innerrhoden and ausserrhoden, with id 15. id 16 is ignored.
     "st_gallen": 17,
     "graub_nden": 18,
     "aargau": 19,
@@ -70,7 +70,7 @@ function id2canton(cantonId) {
             // of Bern, we need to add this special clause
             return ["bern", "biel"];
         } else if (cantonId === id) {
-            return canton;
+            return [canton];
         }
     }
     return null; // Return null if no matching canton id is found
@@ -272,6 +272,9 @@ function buildQueryUrl(options = null) {
 async function getCachedData(options = null) {
     // We use the session storage to cache the results of requests to the
     // API, in order to minimize network load.
+    // FIXME: The sessionStorage has a maximum size. When it is reached,
+    // the cache stops working and breaks the whole app.
+    // TODO: Add an invalidation mechanism to free up space when near the limit.
     const queryUrl = buildQueryUrl(options);
     const cachedData = sessionStorage.getItem(queryUrl)
 

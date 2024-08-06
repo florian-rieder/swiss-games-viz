@@ -3,7 +3,7 @@ function displayCategoryBadges() {
     // This is pretty dirty honestly... But I can't see a better way for the moment to display all categorie's badges
     // while also showing the pretty name, while also directly using the query params which must be lists of strings
     // (categories slugs)
-    const variableNames = ["genres", "platforms", "stores", "states"];
+    const variableNames = ["cantons", "genres", "platforms", "stores", "states"];
     const data = [];
 
     variableNames.forEach(variableName => {

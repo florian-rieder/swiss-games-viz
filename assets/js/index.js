@@ -70,15 +70,21 @@ getCachedData(currentParams).then((data) => {
     });
 });
 
-function selectCanton(cantonSlug) {
-    // Prevent requesting the same data directly
-    // FIXME: Fails when the current canton is ["bern", "biel"]
-    if (cantonSlug == currentParams.cantons) return;
-    if (cantonSlug == null) {
-        currentParams.cantons = []
-    } else {
-        currentParams.cantons = cantonSlug;
+function selectCanton(cantonSlugs) {
+    // Empty list of selected cantons if cantonSlugs is null
+    if (cantonSlugs == null) {
+        currentParams.cantons = [];
+        updateData().then(updateViz);
+        return;
     }
+
+    // Otherwise, cantonsSlugs is an array containing canton slugs we
+    // will add to the current query parameters
+    cantonSlugs.forEach(slug => {
+        if (currentParams.cantons.includes(slug)) return;
+
+        currentParams.cantons.push(slug);
+    });
 
     updateData().then(updateViz);
 }
@@ -115,6 +121,19 @@ function updateViz() {
 
     document.getElementById("num-loaded-games").innerHTML = currentData.hits.games.length;
     document.getElementById("num-total-games").innerHTML = currentData.hits.total;
+
+    // Update canton title
+    let cantonsKeyNames = Object.entries(globalData.aggregates.games_per_canton)
+        .filter(([k, v]) => currentParams.cantons.includes(k))
+        .map(([k, v]) => v.key_name)
+        .join(', ');
+    
+    if (cantonsKeyNames == "") {
+        cantonsKeyNames = "Suisse";
+    }
+
+    // Set the title to the name of the canton(s)
+    document.querySelector("#canton-selection-title").innerHTML = cantonsKeyNames;
 
     // Update visualizations with new data
     updateDropdowns();
