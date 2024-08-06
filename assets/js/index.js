@@ -1,6 +1,7 @@
 let globalData, currentData;
 let firstYear, lastYear;
 let cantons, lakes;
+let originalFirstYear, originalLastYear;
 
 let currentParams = {
     page: null,
@@ -9,7 +10,7 @@ let currentParams = {
     stores: [],
     genres: [],
     states: [],
-    locations: null,
+    locations: [],
     release_year_start: null,
     release_year_end: null
 }
@@ -38,6 +39,8 @@ getCachedData(currentParams).then((data) => {
     [firstYear, lastYear] = d3.extent(Object.keys(data.aggregates.games_per_year).map(key => parseInt(key)));
     currentParams.release_year_start = firstYear;
     currentParams.release_year_end = lastYear;
+    originalFirstYear = firstYear;
+    originalLastYear = lastYear;
 
     // Initialize the release years slider
     sliderStart.value = firstYear;
@@ -122,6 +125,20 @@ function updateViz() {
     document.getElementById("num-loaded-games").innerHTML = currentData.hits.games.length;
     document.getElementById("num-total-games").innerHTML = currentData.hits.total;
 
+    if (currentParams.cantons.length > 0 ||
+        currentParams.stores.length > 0 ||
+        currentParams.states.length > 0 ||
+        currentParams.genres.length > 0 ||
+        //currentParams.locations.length > 0 ||
+        currentParams.platforms.length > 0 ||
+        (currentParams.release_year_end != null && currentParams.release_year_end != originalLastYear) ||
+        (currentParams.release_year_start != null && currentParams.release_year_start != originalFirstYear)
+    ) {
+        resetBtn.classList.remove('hidden');
+    } else {
+        resetBtn.classList.add('hidden');
+    }
+
     // Update canton title
     let cantonsKeyNames = Object.entries(globalData.aggregates.games_per_canton)
         .filter(([k, v]) => currentParams.cantons.includes(k))
@@ -164,7 +181,7 @@ resetBtn.addEventListener("click", e => {
         stores: [],
         genres: [],
         states: [],
-        locations: null,
+        locations: [],
         release_year_start: null,
         release_year_end: null
     }
@@ -180,10 +197,8 @@ function onInputsChanged() {
     if ((currentParams.release_year_start != null && sliderStart.value != currentParams.release_year_start)
         || (currentParams.release_year_end != null && sliderEnd.value != currentParams.release_year_end)) {
         submitBtn.classList.remove("hidden");
-        resetBtn.classList.remove("hidden");
     } else {
         submitBtn.classList.add("hidden");
-        resetBtn.classList.add("hidden");
     }
 }
 
