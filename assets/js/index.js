@@ -194,8 +194,8 @@ resetBtn.addEventListener("click", e => {
 });
 
 function onInputsChanged() {
-    if ((currentParams.release_year_start != null && sliderStart.value != currentParams.release_year_start)
-        || (currentParams.release_year_end != null && sliderEnd.value != currentParams.release_year_end)) {
+    if (((currentParams.release_year_start != null && sliderStart.value != currentParams.release_year_start) || currentParams.release_year_start == null)
+        || ((currentParams.release_year_end != null && sliderEnd.value != currentParams.release_year_end) || currentParams.release_year_end == null)) {
         submitBtn.classList.remove("hidden");
     } else {
         submitBtn.classList.add("hidden");
