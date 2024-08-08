@@ -55,6 +55,8 @@ When starting with shapefiles, which are commonly used to share and distribute g
 The conversion process was complex due to the coordinate system used by the Swiss Federal Statistical Office's shapefiles (LV95, the Swiss national coordinate system). These coordinates had to be recoded to WGS84 (the global coordinate system) in order to be understood by d3.js.
 After trying out different online and local converters and failing to obtain the desired result, I opted to create a custom conversion script in Python, using the `pandas` and `geopandas` libraries.
 
+Due to the particularities of the Swiss Games Garden data, having a canton entry only for Appenzell, instead of the two official cantons Appenzell Innerrhoden and Appenzell Ausserrhoden, I had to merge the two cantons into one. Another particularity is that Biel is counted as a canton, when it is a town in canton Bern.
+
 ## Installation
 Setting up the development environment for this static website is straightforward. It can be done using Visual Studio Code or its open-source alternative, [VSCodium](https://vscodium.com/) with the [Live Server (Five Server)](https://open-vsx.org/extension/glenn2223/live-sass) plugin.
 Other options can also be used as long as the files are served from a local server.
