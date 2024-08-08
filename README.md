@@ -1,6 +1,6 @@
 # Swiss Games Viz'
 
-This project is a dashboard visualisation of data about Swiss games, obtained from [Swiss Games Garden](https://swissgames.garden), made for the course "Data visualisation" given by Isaac Pante at the University of Lausanne (UNIL, SLI).
+This project is a dashboard visualisation of data about Swiss games, obtained from [Swiss Games Garden](https://swissgames.garden), made for the course "Data visualisation" given by Isaac Pante (UNIL, SLI) at the University of Lausanne.
 
 This visualisation allows for a greater understanding of the types of games made in Switzerland chronologically, geographically, thematically, as well as technically. It adds to the functionality of the Swiss Games Garden website, by allowing the visualisation and exploration of the data in a much more intuitive and interactive fashion.
 
@@ -9,13 +9,13 @@ This visualisation allows for a greater understanding of the types of games made
 <img alt="Preview" src="https://github.com/user-attachments/assets/4f064537-1121-46cc-abc7-8956fdd1ed51" style="width: 100%;">
 
 ## Features
-The dashboard allows users to explore and interact with data using various query parameters, selectable through dropdown menus or by directly interacting with the visualizations. Available parameters include "Cantons," "Genres," "Stores," "Platforms," and "States."
+The dashboard allows users to explore and interact with data using various query parameters, selectable through dropdown menus or by directly interacting with the visualisations. Available parameters include "Cantons," "Genres," "Stores," "Platforms," and "States."
 
 Changes to query parameters can be submitted using a "Submit" button, which appears only if there are unsaved changes. This button is particularly relevant when using the histogram's slider, as most other selections automatically update the data. This prevents unnecessary data reloads, optimizing performance when adjusting the time range.
 
 A "Reset" button allows users to clear all selected parameters, returning the page to its initial state.
 
-The currently selected categories are displayed as badges below the visualizations and above the list of games, making it easy to track applied filters.
+The currently selected categories are displayed as badges below the visualisations and above the list of games, making it easy to track applied filters.
 
 ### Choropleth map
 <img width="501" alt="Choropleth map of the number of videogames produced per canton in Switzerland" src="https://github.com/user-attachments/assets/19d1aa59-6af5-4b98-b165-0f71709913e3" style="width: 100%">
@@ -46,7 +46,7 @@ The list of games, displayed in a paginated format at the bottom of the dashboar
 
 ## Data
 ### Sources
-- Geographical Data: The interactive map of Switzerland is based on geographical data obtained from the [Swiss Federal Statistical Office](https://www.bfs.admin.ch/bfs/en/home/statistics/regional-statistics/base-maps/cartographic-bases.assetdetail.21245514.html). This data provides the foundational map layers necessary for the visualization.
+- Geographical Data: The interactive map of Switzerland is based on geographical data obtained from the [Swiss Federal Statistical Office](https://www.bfs.admin.ch/bfs/en/home/statistics/regional-statistics/base-maps/cartographic-bases.assetdetail.21245514.html). This data provides the foundational map layers necessary for the visualisation.
 - Game Data: Information about Swiss games is sourced directly from the [Swiss Games Garden](https://swissgames.garden/) API and is fetched in real-time as users interact with the dashboard.
 
 ### Geodata encoding
@@ -63,4 +63,4 @@ Other options can also be used as long as the files are served from a local serv
 A useful tool for compiling the SCSS when using VSCodium is the [Live Sass Compiler](https://open-vsx.org/extension/glenn2223/live-sass) plugin.
 
 ## Libraries
-The visualization leverages `d3.js` for data-driven document rendering. The geodata encoding script uses Python 3.12 and the `pandas` and `geopands` libraries for data manipulation and conversion.
+The visualisation leverages `d3.js` for data-driven document rendering. The geodata encoding script uses Python 3.12 and the `pandas` and `geopands` libraries for data manipulation and conversion.
