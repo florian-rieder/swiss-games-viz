@@ -15,13 +15,8 @@ A "Reset" button allows users to clear all selected parameters, returning the pa
 
 The currently selected categories are displayed as badges below the visualizations and above the list of games, making it easy to track applied filters.
 
-### Dropdowns
-<img width="593" alt="Dropdown" src="https://github.com/user-attachments/assets/9ef24a8e-2830-4b63-b8e6-7e69fff3f844">
-
-The dropdown menus provide a straightforward way to filter the data. Users can select multiple categories to refine their search. Each dropdown contains a list of checkboxes to select categories, and the number of games associated with each category is displayed to the right.
-
 ### Choropleth map
-![Choropleth map of the number of videogames produced per canton in Switzerland](https://github.com/user-attachments/assets/7c1ec3e7-5abe-4d1e-a835-b7f341d0f55f)
+<img width="501" alt="Choropleth map of the number of videogames produced per canton in Switzerland" src="https://github.com/user-attachments/assets/19d1aa59-6af5-4b98-b165-0f71709913e3" style="width: 100%">
 
 A choropleth map visually represents the geographical distribution of game production across Swiss cantons. It highlights the number of games produced per canton based on the current parameters. Users can click on a canton to select or deselect it, with hover functionality providing the canton name and the number of games produced.
 
@@ -35,6 +30,12 @@ The histogram displays the frequency of game production over time, allowing user
 
 Donut charts are used to show the proportion of categories for the "Genres", "Stores", "Platforms", and "States" variables for games which meet the selected parameters.
 Users can click on slices to add or remove categories from their selection, with hover details providing category names and the number of associated games.
+
+### Dropdowns
+<img width="593" alt="Dropdown" src="https://github.com/user-attachments/assets/9ef24a8e-2830-4b63-b8e6-7e69fff3f844">
+
+The dropdown menus provide a straightforward way to filter the data. Users can select multiple categories to refine their search. Each dropdown contains a list of checkboxes to select categories, and the number of games associated with each category is displayed to the right.
+
 
 ### List of selected games
 ![List of games](https://github.com/user-attachments/assets/a5403d78-ba04-4365-82bf-5b51801fc65e)
