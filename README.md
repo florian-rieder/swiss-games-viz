@@ -56,9 +56,9 @@ The conversion process was complex due to the coordinate system used by the Swis
 After trying out different online and local converters and failing to obtain the desired result, I opted to create a custom conversion script in Python, using the `pandas` and `geopandas` libraries.
 
 ## Installation
-Setting up the development environment for this static website is straightforward. It can be done using Visual Studio Code or its open-source alternative, [VSCodium](https://vscodium.com/).
-Other options can also be used as long as the files are served from a local server, such as by using the [Live Server (Five Server)](https://open-vsx.org/extension/glenn2223/live-sass) plugin.
-A useful tool for compiling the SCSS when using VSCode is the [Live Sass Compiler](https://open-vsx.org/extension/glenn2223/live-sass) plugin.
+Setting up the development environment for this static website is straightforward. It can be done using Visual Studio Code or its open-source alternative, [VSCodium](https://vscodium.com/) with the [Live Server (Five Server)](https://open-vsx.org/extension/glenn2223/live-sass) plugin.
+Other options can also be used as long as the files are served from a local server.
+A useful tool for compiling the SCSS when using VSCodium is the [Live Sass Compiler](https://open-vsx.org/extension/glenn2223/live-sass) plugin.
 
 ## Libraries
 The visualization leverages `d3.js` for data-driven document rendering. The geodata encoding script uses Python 3.12 and the `pandas` and `geopands` libraries for data manipulation and conversion.
