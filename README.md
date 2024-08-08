@@ -4,6 +4,8 @@ This project is a dashboard visualisation of data about Swiss games, obtained fr
 
 This visualisation allows for a greater understanding of the types of games made in Switzerland chronologically, geographically, thematically, as well as technically. It adds to the functionality of the Swiss Games Garden website, by allowing the visualisation and exploration of the data in a much more intuitive and interactive fashion.
 
+[Link to the dashboard](https://florian-rieder.github.io/swiss-games-viz/)
+
 <img alt="Preview" src="https://github.com/user-attachments/assets/4f064537-1121-46cc-abc7-8956fdd1ed51" style="width: 100%;">
 
 ## Features
