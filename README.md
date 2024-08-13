@@ -63,4 +63,4 @@ Other options can also be used as long as the files are served from a local serv
 A useful tool for compiling the SCSS when using VSCodium is the [Live Sass Compiler](https://open-vsx.org/extension/glenn2223/live-sass) plugin.
 
 ## Libraries
-The visualisation leverages `d3.js` for data-driven document rendering. The geodata encoding script uses Python 3.12 and the `pandas` and `geopands` libraries for data manipulation and conversion.
+The visualisation leverages `d3.js` for data-driven document rendering. The geodata encoding script uses Python 3.12 and the `pandas` and `geopandas` libraries for data manipulation and conversion.
