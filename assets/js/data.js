@@ -35,7 +35,6 @@ const stores = {
 const canton2id = {
     "z_rich": 1,
     "bern": 2,
-    "biel": 2, // Biel is a town in Berne canton... Idk why it's there
     "luzern": 3,
     "uri": 4,
     "schwyz": 5,
@@ -59,17 +58,13 @@ const canton2id = {
     "neuch_tel": 24,
     "geneva": 25,
     "jura": 26,
-    "foreign": 99// "foreign" can also happen
+    "foreign": 99// "foreign" can also happen, but we don't really do anything with it
 }
 
 /// Get the corresponding canton slug for an id. Returns a list of slugs in weird cases.
 function id2canton(cantonId) {
     for (const [canton, id] of Object.entries(canton2id)) {
-        if (cantonId === 2) {
-            // Since Biel is not actually a canton, but a city in the canton
-            // of Bern, we need to add this special clause
-            return ["bern", "biel"];
-        } else if (cantonId === id) {
+        if (cantonId === id) {
             return [canton];
         }
     }
@@ -89,6 +84,10 @@ async function getData(options = null) {
 
     const url = buildQueryUrl(options)
 
+    if (DEBUG) {
+        console.log(url);
+    }
+
     // List of property slugs for which aggregate data exist
     let slugs = ["cantons", "genres", "platforms", "stores", "states", "locations"];
 
@@ -106,6 +105,10 @@ async function getData(options = null) {
     const aggregates = extractAggregates(json, slugs);
 
     const hits = extractHits(json);
+
+    if (DEBUG) {
+        console.log({aggregates, hits})
+    }
     
     return {aggregates, hits};
 }

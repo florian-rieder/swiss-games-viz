@@ -19,7 +19,7 @@ function listGames(data) {
             if (d.medias.length > 0) {
                 cover = `<img src="${d.medias[0].href}">`;
             } else {
-                cover = '<img src="/assets/images/cover-placeholder.svg">';
+                cover = '<img src="/swiss-games-viz/assets/images/cover-placeholder.svg">';
             }
 
             let credits = [];
@@ -41,9 +41,11 @@ function listGames(data) {
             // Platform badges
             let platforms = []
 
-            for (platform of d.releases) {
-                const platformBadge = `<span class="badge">${platform.platform_name}</span>`
-                platforms.push(platformBadge)
+            if (d.releases) {
+                for (platform of d.releases) {
+                    const platformBadge = `<span class="badge">${platform.platform_name}</span>`
+                    platforms.push(platformBadge)
+                }
             }
 
             platforms = platforms.join('');
@@ -66,6 +68,11 @@ function listGames(data) {
             //     additionalPlatforms = `+${d.releases.length - 1}`
             // }
 
+            let release_year = '????'
+            if (d.releases_years) {
+                release_year = d.releases_years[0].year
+            }
+
             return `
             <a href="https://swissgames.garden${d.path}" target="_blank">
             <div class="game-cover">
@@ -74,7 +81,7 @@ function listGames(data) {
             <div class="game-content">
                 <div class="game-meta">
                     <span class="game-credits truncate">${credits}</span>
-                    <span class="game-release-year">${d.releases_years[0].year}</span>
+                    <span class="game-release-year">${release_year}</span>
                 </div>
                 <div class="game-title">${d.title}</div>
                 <div class="game-badges">

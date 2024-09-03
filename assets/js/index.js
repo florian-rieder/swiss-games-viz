@@ -1,3 +1,5 @@
+const DEBUG = false;
+
 let globalData, currentData;
 let firstYear, lastYear;
 let cantons, lakes;
